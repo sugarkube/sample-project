@@ -1,12 +1,12 @@
 # This creates infrastructure that must exist before launching a kops cluster.
 # It creates an S3 bucket for Terraform remote state (not strictly necessary
-# but a fiddly task that should be done before running any other kapps), a
-# hosted zone and a public load balancer for Kops. It should be run as an
-# initManifest so it gets executed before creating a cluster.
+# but a fiddly task that should be done before running any other kapps) and
+# a hosted zone. It should be run as an initManifest so it gets executed before
+# creating a cluster.
 #
 # If you're running on a different provider, you could either reimplement these
 # kapps for your provider or create a `terraform_<provider>` directory in each
-# one for your provider so a single kapp can support multiple clouds.
+# one so a single kapp can support multiple clouds.
 options:
   parallelisation: 1      # kapps in this manifest must be installed in order,
   # so disable parallelism for this manifest
@@ -31,18 +31,6 @@ present:
       - uri: git@github.com:sugarkube/kapps.git
         branch: master
         path: incubator/hosted-zone
-      - uri: git@github.com:sugarkube/kapps.git
-        branch: master
-        path: incubator/common-makefiles
-    templates:
-      - source: terraform/backend.tf
-        dest: hosted-zone/terraform_aws/_generated_backend.tf
-
-  - id: load-balancer
-    sources:
-      - uri: git@github.com:sugarkube/kapps.git
-        branch: master
-        path: incubator/load-balancer
       - uri: git@github.com:sugarkube/kapps.git
         branch: master
         path: incubator/common-makefiles
