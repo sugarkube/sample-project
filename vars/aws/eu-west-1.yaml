@@ -1,0 +1,3 @@
+# values in this file will apply to anything running in eu-west-1, regardless
+# of the AWS account or profile. You might use this for endpoints, e.g.:
+#api_gateway: apigateway.eu-west-1.amazonaws.com
