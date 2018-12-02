@@ -9,7 +9,7 @@
 # one so a single kapp can support multiple clouds.
 options:
   parallelisation: 1      # kapps in this manifest must be installed in order,
-  # so disable parallelism for this manifest
+                          # so parallelism is disabled for this manifest
 present:
   - id: terraform-remote-state
     sources:

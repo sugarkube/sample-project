@@ -11,7 +11,7 @@
 # installed in the target cluster.
 options:
   parallelisation: 1      # kapps in this manifest must be installed in order,
-                          # so disable parallelism for this manifest
+                          # so parallelism is disabled for this manifest
 present:
   - id: tiller
     sources:
