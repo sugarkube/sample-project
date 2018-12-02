@@ -10,6 +10,6 @@ provisioner:
   params:
     start:        # parameters for the `minikube start` command
       bootstrapper: kubeadm
-      memory: 2048
-      cpus: 2
-      disk_size: 30g
+      memory: 4096
+      cpus: 4
+      disk_size: 50g

@@ -2,6 +2,6 @@
 provisioner:
   params:
     start:        # parameters for the `minikube start` command
-      memory: 4096
+      memory: 5120
       cpus: 4
       disk_size: 100g
