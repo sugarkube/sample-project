@@ -47,6 +47,10 @@ present:
     - uri: git@github.com:sugarkube/kapps.git
       branch: master
       path: incubator/common-makefiles
+    - uri: git@github.com:sugarkube/sample-project.git
+      branch: master
+      path: demo-data/wordpress/site1
+      name: data
 
   - id: wordpress-site2
     sources:
@@ -57,3 +61,7 @@ present:
     - uri: git@github.com:sugarkube/kapps.git
       branch: master
       path: incubator/common-makefiles
+    - uri: git@github.com:sugarkube/sample-project.git
+      branch: master
+      path: demo-data/wordpress/site2
+      name: data
