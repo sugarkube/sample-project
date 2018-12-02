@@ -1,52 +1,43 @@
-local-standard:
+local-web:        # a local stack for web development
   provider: local
   provisioner: minikube
   profile: local
   cluster: standard
   providerVars:   # YAML files under here will be recursively merged. Used to configure
-    - providers/    # providers. Errors will be thrown if expected dirs don't exist.
+    - providers/  # providers. Errors will be thrown if expected dirs don't exist.
   kappVars:       # The values in YAML files in these directories will be recursively merged
     - vars/       # into a single map/dict. The resulting values can be used to template
     - values/     # files for kapps, or kapps can declare that they need them set as
                   # parameters/env vars in their `sugarkube.yaml` file.
   templateDirs:
-    # todo - add support for searching in kapps first, so templates can be kept in kapps?
+    # todo - add support for searching in kapps first, so templates can be kept in kapps
     - templates/    # Source template file directories. Manifests can refer to files in these
                     # directories to write templated files into kapps to parameterise them by
                     # cluster/provider/profile, etc.
-
-  # InitManifests are the same as normal manifests, but they are executed before
-  # clusters are created (or when explicitly invoked by `sugarkube kapps apply --init-manifests`)
-  initManifests:
-    - uri: manifests/05-pre-launch-dependencies.yaml
-
-  # Manifests are executed by running `sugarkube kapps apply`
-  manifests:
+  manifests:        # Manifests are executed by running `sugarkube kapps apply`
     # todo - support pulling these from git repos
-    - uri: manifests/10-post-launch-setup.yaml
+    - uri: manifests/10-bootstrap-cluster.yaml
     - uri: manifests/40-wordpress-sites.yaml
-      id: web       # explicitly set the manifest ID. Will be used as a prefix to generate kapp IDs.
+      id: 40-web-sites       # explicitly set the manifest ID. Will be used as a prefix to generate kapp IDs.
 
 # todo - document it's possible to run these stacks while overriding e.g. just the cluster
 # name to deploy there. Then we could have stacks for different tasks (e.g. opsy-stuff,
 # ci-cd, monitoring) and devs could just deploy them to their own cluster without
 # duplicating these different stacks, one per developer).
-local-large:
+local-ops:        # local stack for ops-type work
   provider: local
   provisioner: minikube
   profile: local
   cluster: large
   providerVars:   # YAML files under here will be recursively merged. Used to configure
-    - providers/    # providers. Errors will be thrown if expected dirs don't exist.
+    - providers/  # providers. Errors will be thrown if expected dirs don't exist.
   kappVars:       # YAML files under these directories will be recursively merged
-    - vars/         # and values passed to kapps to alter them per profile/manifest/etc.
+    - vars/       # and values passed to kapps to alter them per profile/manifest/etc.
   manifests:
     # if no protocol is given, file:// is assumed.
-    - uri: manifests/10-post-launch-setup.yaml
+    - uri: manifests/10-bootstrap-cluster.yaml
     - uri: manifests/20-security.yaml
     - uri: manifests/30-ci-cd.yaml
-    - uri: manifests/40-wordpress-sites.yaml
-      id: web       # explicitly set the manifest ID. Will be used as a prefix to generate kapp IDs.
 
 aws-dev:
   provider: aws
@@ -56,15 +47,19 @@ aws-dev:
   cluster: dev1
   region: eu-west-1
   providerVars:   # YAML files under here will be recursively merged. Used to configure
-    - providers/    # providers. Errors will be thrown if expected dirs don't exist.
+    - providers/  # providers. Errors will be thrown if expected dirs don't exist.
   kappVars:       # YAML files under these directories will be recursively merged
-    - vars/         # and values passed to kapps to alter them per profile/manifest/etc.
+    - vars/       # and values passed to kapps to alter them per profile/manifest/etc.
     - values/
   templateDirs:
     - templates/    # paths to template files that can be used by kapps
+  # InitManifests are the same as normal manifests, but they are executed before
+  # clusters are created (or when explicitly invoked by `sugarkube kapps apply --init-manifests`)
+  initManifests:
+    - uri: manifests/05-pre-launch-dependencies.yaml
   manifests:
     # if no protocol is given, file:// is assumed.
-    - uri: manifests/10-post-launch-setup.yaml
+    - uri: manifests/10-bootstrap-cluster.yaml
     - uri: manifests/15-core-aws.yaml
     - uri: manifests/20-security.yaml
     - uri: manifests/30-ci-cd.yaml
