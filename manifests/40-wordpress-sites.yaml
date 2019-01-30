@@ -58,6 +58,7 @@ present:
       branch: master
       #branch: wordpress-0.1.0
       path: incubator/wordpress
+      name: wp-kapp
     - uri: git@github.com:sugarkube/kapps.git
       branch: master
       path: incubator/common-makefiles
