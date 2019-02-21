@@ -7,6 +7,7 @@ hosted_zone: localhost            # The domain to host your stuff under.
 # Values passed to `minikube start`. Underscores are converted to hyphens and
 # values keys prepended with two dashes. So e.g. `disk_size` is passed as `--disk-size`.
 provisioner:
+  binary: minikube
   params:
     start:        # parameters for the `minikube start` command
       bootstrapper: kubeadm
