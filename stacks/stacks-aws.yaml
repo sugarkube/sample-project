@@ -2,7 +2,7 @@ defaults: &defaults
   provider: aws
   account: dev
   profile: dev
-  providerVars:   # YAML files under here will be recursively merged. Used to configure
+  providerVarsDirs:   # YAML files under here will be recursively merged. Used to configure
     - ../providers/    # providers. Errors will be thrown if expected dirs don't exist.
   kappVars:       # YAML files under these directories will be recursively merged
     - ../vars/         # and values passed to kapps to alter them per profile/manifest/etc.
