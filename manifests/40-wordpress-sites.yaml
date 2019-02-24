@@ -14,16 +14,6 @@ present:
                                       # 'template' directories declared in the stacks.yaml file
 #        dest: wordpress/_generated_backend.tf   # dest relative to the kapp root directory
 
-    installer:              # installer-specific values
-#      target: wordpress     # The target source (defined below) to run the makefile
-                            # for to install this kapp. Defaults to the
-                            # identifier (i.e. wordpress-site1)
-      values:
-      - site1-values        # A list of sources to search for cluster-specific
-                            # values files. Defaults to the main source
-                            # directory (in this case wordpress)
-      params:               # key values to set as env vars when calling the Makefile
-        namespace: wordpress-sites    # Explicitly set a parameter used by Helm
     # Sources to checkout as siblings in the cache for this kapp. This allows
     # creating a cache entry from e.g. the actual kapp source, a directory of
     # shared makefiles, and/or pulling in `values.yaml` files etc. from a
