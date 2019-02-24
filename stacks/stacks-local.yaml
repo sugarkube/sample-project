@@ -4,7 +4,7 @@ defaults: &defaults
   profile: local
   providerVarsDirs:   # YAML files under here will be recursively merged. Used to configure
   - ../providers/  # providers. Errors will be thrown if expected dirs don't exist.
-  kappVars:       # The values in YAML files in these directories will be recursively merged
+  kappVarsDirs:       # The values in YAML files in these directories will be recursively merged
     - ../vars/    # into a single map/dict. The resulting values can be used to template
       # files for kapps, or kapps can declare that they need them set as
     # parameters/env vars in their `sugarkube.yaml` file.
