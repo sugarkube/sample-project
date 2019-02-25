@@ -1,7 +1,9 @@
 defaults: &defaults
   provider: aws
+  provisioner: kops
   account: dev
   profile: dev
+  region: eu-west-2
   providerVarsDirs:   # YAML files under here will be recursively merged. Used to configure
     - ../providers/    # providers. Errors will be thrown if expected dirs don't exist.
   kappVarsDirs:       # YAML files under these directories will be recursively merged
@@ -10,11 +12,9 @@ defaults: &defaults
   templateDirs:
     - ../templates/    # paths to template files that can be used by kapps
 
-aws-dev:
+aws-dev1:
   <<: *defaults
-  provisioner: kops
   cluster: dev1
-  region: eu-west-1
   initManifests:
     - uri: ../manifests/05-pre-launch-dependencies.yaml
   manifests:
