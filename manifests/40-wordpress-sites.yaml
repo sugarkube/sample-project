@@ -33,14 +33,14 @@ present:
 #      path: examples/values/wordpress/site1/
 #      # Name of the source. Defaults to the last component of the path (in this
 #      # case `site1`). Also used as a key.
-#      name: site1-values
+#      id: site1-values
     - uri: git@github.com:sugarkube/kapps.git
       branch: master
       path: incubator/common-makefiles
     - uri: git@github.com:sugarkube/sample-project.git
       branch: master
       path: demo-data/wordpress/site1
-      name: data
+      id: data
 
   - id: wordpress-site2
     sources:
@@ -48,11 +48,11 @@ present:
       branch: master
       #branch: wordpress-0.1.0
       path: incubator/wordpress
-      name: wp-kapp
+      id: wp-kapp
     - uri: git@github.com:sugarkube/kapps.git
       branch: master
       path: incubator/common-makefiles
     - uri: git@github.com:sugarkube/sample-project.git
       branch: master
       path: demo-data/wordpress/site2
-      name: data
+      id: data
