@@ -10,13 +10,17 @@
 options:
   parallelisation: 1      # kapps in this manifest must be installed in order,
                           # so parallelism is disabled for this manifest
-present:
-  - id: terraform-remote-state
+
+kapps:
+  terraform-remote-state:
+    state: present    # if 'absent' (default) the kapp won't be installed or will be deleted (todo)
     sources:
-      - uri: git@github.com:sugarkube/kapps.git
+      kapp:
+        uri: git@github.com:sugarkube/kapps.git
         branch: master
         path: incubator/terraform-remote-state
-      - uri: git@github.com:sugarkube/kapps.git
+      makefiles:
+        uri: git@github.com:sugarkube/kapps.git
         branch: master
         path: incubator/common-makefiles
     templates:
@@ -26,12 +30,14 @@ present:
   #      - source: terraform/backend.tf
   #        dest: terraform-remote-state/terraform_aws/_generated_backend.tf.tmp
 
-  - id: hosted-zone
+  hosted-zone:
     sources:
-      - uri: git@github.com:sugarkube/kapps.git
+      kapp:
+        uri: git@github.com:sugarkube/kapps.git
         branch: master
         path: incubator/hosted-zone
-      - uri: git@github.com:sugarkube/kapps.git
+      makefiles:
+        uri: git@github.com:sugarkube/kapps.git
         branch: master
         path: incubator/common-makefiles
     templates:

@@ -12,8 +12,9 @@
 options:
   parallelisation: 1      # kapps in this manifest must be installed in order,
                           # so parallelism is disabled for this manifest
-present:
+kapps:
   tiller:
+    state: present
     sources:
       kapp:
         uri: git@github.com:sugarkube/kapps.git
@@ -30,6 +31,7 @@ present:
   # The simplest manifest entry uses defaults for e.g. the helm namespace,
   # chart name, etc. when using `helm` as the installer.
   cert-manager:       # Manifest-unique identifier.
+    state: present
     # Sources to checkout as siblings in the cache for this kapp. This allows
     # creating a cache entry from e.g. the actual kapp source, a directory of
     # shared makefiles, and/or pulling in `values.yaml` files etc. from a
@@ -52,6 +54,7 @@ present:
   # The default installer for manifests is stored in config so we don't need
   # to add it to every entry. But we could in future with e.g. `installer: my-installer`
   ingress:      # this can be anything - it doesn't need to relate to the name of any source
+    state: present
     sources:
       ingress:
         uri: git@github.com:sugarkube/kapps.git

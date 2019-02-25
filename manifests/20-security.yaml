@@ -1,12 +1,14 @@
 # A security layer. In this case it installs Keycloak which can be used as an OIDC provider
 # (but this kapp so far just installs it - it doesn't configure it as yet).
-present:
-  - id: keycloak
+kapps:
+  keycloak:
+    state: present
     sources:
-    - uri: git@github.com:sugarkube/kapps.git
-      branch: master
-      #branch: keycloak-0.1.0
-      path: incubator/keycloak
-    - uri: git@github.com:sugarkube/kapps.git
-      branch: master
-      path: incubator/common-makefiles
+      kapp:
+        uri: git@github.com:sugarkube/kapps.git
+        branch: master # todo - change to e.g. keycloak-0.1.0
+        path: incubator/keycloak
+      makefiles:
+        uri: git@github.com:sugarkube/kapps.git
+        branch: master
+        path: incubator/common-makefiles
