@@ -1,6 +1,11 @@
 # This manifest contains kapps that represent the actual products you're shipping,
 # in this case web sites.
 
+options:
+  # todo - implement
+  kapps-enabled-by-default: false # by default no kapps will be installed unless they are explicitly enabled.
+                                  # They could be enabled per cluster via overrides in a stack config file.
+
 # Kapps listed under this key will be installed if they are not currently
 # installed in the target cluster.
 present:
@@ -8,7 +13,7 @@ present:
   #
   # Unique identifier. The same kapp can be installed multiple times provided
   # this is unique per instance. This will be the release name when using Helm.
-  - id: wordpress-site1
+  wordpress-site1:
     templates:        # a list of templates to render for this kapp
 #      - source: terraform/backend.tf  # source template must exist under one of the
                                       # 'template' directories declared in the stacks.yaml file
@@ -19,40 +24,39 @@ present:
     # shared makefiles, and/or pulling in `values.yaml` files etc. from a
     # separately versioned source.
     sources:
-    - uri: git@github.com:sugarkube/kapps.git
-      branch: master
-      # the name of this source defaults to `wordpress` because it's the last
-      # component of the path. The name can also be set explicitly as
-      # illustrated below.
-      path: incubator/wordpress
+      wordpress:
+        uri: git@github.com:sugarkube/kapps.git
+        branch: master
+        # the name of this source defaults to `wordpress` because it's the last
+        # component of the path. The name can also be set explicitly as
+        # illustrated below.
+        path: incubator/wordpress
 #      includeValues: false    # don't search this source for helm/terraform values
 # todo - implement these paths and uncomment as an example
-#    - uri: git@github.com:sugarkube/sugarkube.git
+#    - uri: git@github.com:sugarkube/sample-project.git
 #      branch: master
 #      # this lets us reuse the same kapp parameterised differently per instance
 #      path: examples/values/wordpress/site1/
-#      # Name of the source. Defaults to the last component of the path (in this
-#      # case `site1`). Also used as a key.
-#      id: site1-values
-    - uri: git@github.com:sugarkube/kapps.git
+    makefiles:
+      uri: git@github.com:sugarkube/kapps.git
       branch: master
       path: incubator/common-makefiles
-    - uri: git@github.com:sugarkube/sample-project.git
+    data:
+      uri: git@github.com:sugarkube/sample-project.git
       branch: master
       path: demo-data/wordpress/site1
-      id: data
 
-  - id: wordpress-site2
+  wordpress-site2:
     sources:
-    - uri: git@github.com:sugarkube/kapps.git
-      branch: master
-      #branch: wordpress-0.1.0
-      path: incubator/wordpress
-      id: wp-kapp
-    - uri: git@github.com:sugarkube/kapps.git
-      branch: master
-      path: incubator/common-makefiles
-    - uri: git@github.com:sugarkube/sample-project.git
-      branch: master
-      path: demo-data/wordpress/site2
-      id: data
+      kapp:
+        uri: git@github.com:sugarkube/kapps.git
+        branch: master # todo change to e.g. wordpress-0.1.0
+        path: incubator/wordpress
+      makefiles:
+        uri: git@github.com:sugarkube/kapps.git
+        branch: master
+        path: incubator/common-makefiles
+      data:
+        uri: git@github.com:sugarkube/sample-project.git
+        branch: master
+        path: demo-data/wordpress/site2

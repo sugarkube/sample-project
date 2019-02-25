@@ -25,10 +25,12 @@ aws-prod:
     - uri: ../manifests/30-ci-cd.yaml
     - uri: ../manifests/40-wordpress-sites.yaml
       id: web
-#      overrides:             # todo - support overriding values in manifests like this
-#        wordpress-site2:     # to be able to change the branch being deployed per stack.
-#          wp-kapp:           # Without this users will need to maintain multiple copies
-#            branch: 1.0.2    # of manifests to control which versions are in each env
-                              # (dev/staging/prod). But, how will we deal with rolling out
-                              # a new kapp for the first time? Have an 'enabled' flag and
-                              # disable it in prod?
+      # Data in manifests can be overridden in stack files like this to e.g. specify the branch of a source to be used
+      # or to modify the values of kapp variables. This lets you use a single manifest across multiple environments
+      # (e.g. dev/staging/prod) just tweaking a few values instead of maintaining multiplle different copies of manifests.
+      overrides:
+        present:
+          wordpress-site2:
+            sources:
+              kapp:
+                branch: 1.0.0   # a different value to in the dev stack
