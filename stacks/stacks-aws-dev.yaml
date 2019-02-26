@@ -29,11 +29,13 @@ aws-dev1:
       # or to modify the values of kapp variables. This lets you use a single manifest across multiple environments
       # (e.g. dev/staging/prod) just tweaking a few values instead of maintaining multiplle different copies of manifests.
       overrides:
-        present:
-          wordpress-site2:
-            sources:
-              kapp:
-                branch: 1.0.2
+        wordpress-site2:
+          sources:
+            wordpress:
+              options:
+                branch: 1.0.2   # you can override just the branch component or you could specify
+                                # an entirely different URI.
 
-      # How will we deal with rolling out a new kapp for the first time? Have an 'enabled' flag and
-      # disable it in prod?
+      # To control rolling out a new kapp for the first time either set the state to absent in the
+      # manifest file and then opt into it in each stack, or do the opposite, set state: present
+      # and opt out of it in specific stacks.
