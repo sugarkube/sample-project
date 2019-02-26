@@ -1,13 +1,6 @@
 kapps:
-  jenkins:
+  - id: jenkins
     state: present
     sources:
-      kapp:
-        uri: git@github.com:sugarkube/kapps.git
-        branch: master
-        #branch: jenkins-0.1.0
-        path: incubator/jenkins
-      makefiles:
-        uri: git@github.com:sugarkube/kapps.git
-        branch: master
-        path: incubator/common-makefiles
+    - uri: git@github.com:sugarkube/kapps.git//incubator/jenkins#master    #branch: jenkins-0.1.0
+    - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master

@@ -8,7 +8,7 @@ kapps:
   #
   # Unique identifier. The same kapp can be installed multiple times provided
   # this is unique per instance. This will be the release name when using Helm.
-  wordpress-site1:
+  - id: wordpress-site1
     state: present
     templates:        # a list of templates to render for this kapp
 #      - source: terraform/backend.tf  # source template must exist under one of the
@@ -20,40 +20,24 @@ kapps:
     # shared makefiles, and/or pulling in `values.yaml` files etc. from a
     # separately versioned source.
     sources:
-      wordpress:
-        uri: git@github.com:sugarkube/kapps.git
-        branch: master
-        # the name of this source defaults to `wordpress` because it's the last
-        # component of the path. The name can also be set explicitly as
-        # illustrated below.
-        path: incubator/wordpress
+      # the name of this source defaults to `wordpress` because it's the last
+      # component of the path. The name can also be set explicitly as
+      # illustrated below.
+    - uri: git@github.com:sugarkube/kapps.git//incubator/wordpress#master
 #      includeValues: false    # don't search this source for helm/terraform values
 # todo - implement these paths and uncomment as an example
 #    - uri: git@github.com:sugarkube/sample-project.git
 #      branch: master
 #      # this lets us reuse the same kapp parameterised differently per instance
 #      path: examples/values/wordpress/site1/
-    makefiles:
-      uri: git@github.com:sugarkube/kapps.git
-      branch: master
-      path: incubator/common-makefiles
-    data:
-      uri: git@github.com:sugarkube/sample-project.git
-      branch: master
-      path: demo-data/wordpress/site1
+    - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
+    - id: data
+      uri: git@github.com:sugarkube/sample-project.git//demo-data/wordpress/site1#master
 
-  wordpress-site2:
+  - id: wordpress-site2
     state: present
     sources:
-      kapp:
-        uri: git@github.com:sugarkube/kapps.git
-        branch: master # todo change to e.g. wordpress-0.1.0
-        path: incubator/wordpress
-      makefiles:
-        uri: git@github.com:sugarkube/kapps.git
-        branch: master
-        path: incubator/common-makefiles
-      data:
-        uri: git@github.com:sugarkube/sample-project.git
-        branch: master
-        path: demo-data/wordpress/site2
+      - uri: git@github.com:sugarkube/kapps.git//incubator/wordpress#master # todo change to e.g. wordpress-0.1.0
+      - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
+      - id: data
+        uri: git@github.com:sugarkube/sample-project.git//demo-data/wordpress/site2#master
