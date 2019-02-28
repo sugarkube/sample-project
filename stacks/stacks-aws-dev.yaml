@@ -8,7 +8,6 @@ defaults: &defaults
     - ../providers/    # providers. Errors will be thrown if expected dirs don't exist.
   kappVarsDirs:       # YAML files under these directories will be recursively merged
     - ../vars/         # and values passed to kapps to alter them per profile/manifest/etc.
-    - ../values/
   templateDirs:
     - ../templates/    # paths to template files that can be used by kapps
 
@@ -30,6 +29,7 @@ aws-dev1:
       # (e.g. dev/staging/prod) just tweaking a few values instead of maintaining multiplle different copies of manifests.
       overrides:
         wordpress-site2:
+          state: present
           sources:
             wordpress:
               options:

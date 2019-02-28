@@ -24,7 +24,8 @@ kapps:
   #      - source: terraform/backend.tf
   #        dest: terraform-remote-state/terraform_aws/_generated_backend.tf.tmp
 
-  hosted-zone:
+  - id: hosted-zone
+    state: present
     sources:
     - uri: git@github.com:sugarkube/kapps.git//incubator/hosted-zone#master
     - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master

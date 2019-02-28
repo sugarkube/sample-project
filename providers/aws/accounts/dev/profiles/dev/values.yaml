@@ -1,0 +1,12 @@
+kube_context: |
+  {{ .kapp.vars.cluster_name }}
+
+
+provisioner:
+  binary: kops      # the binary name/path can be explicitly set so you can version control your provisioners
+                    # (e.g. use kops-1.2.3 in prod and something different in dev).
+
+  params:       # parameters to different kops commands
+    global:     # these are applied to all commands
+      name: |
+        {{ .kapp.vars.cluster_name }}

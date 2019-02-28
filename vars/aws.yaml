@@ -1,0 +1,2 @@
+cluster_name: |
+  {{ .stack.cluster }}.{{ .stack.region }}.{{ .kapp.vars.root_hosted_zone }}
