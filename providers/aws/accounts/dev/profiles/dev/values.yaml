@@ -1,5 +1,4 @@
-kube_context: |
-  {{ .kapp.vars.cluster_name }}
+kube_context: "{{ .kapp.vars.cluster_name }}"
 
 
 provisioner:
@@ -8,5 +7,4 @@ provisioner:
 
   params:       # parameters to different kops commands
     global:     # these are applied to all commands
-      name: |
-        {{ .kapp.vars.cluster_name }}
+      name: "{{ .kapp.vars.cluster_name }}"
