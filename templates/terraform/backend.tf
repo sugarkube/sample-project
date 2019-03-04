@@ -1,9 +1,9 @@
 terraform {
 {{- if eq .stack.provider "aws" }}
   backend "s3" {
-    bucket = "{{ .terraform.state.bucket }}"
-    key    = "{{ .terraform.state.path }}/{{ .kapp.id }}"
-    kms_key_id = "{{ .terraform.state.kms_key_id }}"
+    bucket = "{{ .kapp.vars.terraform.state.bucket }}"
+    key    = "{{ .kapp.vars.terraform.state.path }}/{{ .kapp.id }}"
+    kms_key_id = "{{ .kapp.vars.terraform.state.kms_key_id }}"
     region = "{{ .stack.region }}"
   }
 {{- else }}
