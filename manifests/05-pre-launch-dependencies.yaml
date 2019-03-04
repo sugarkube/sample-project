@@ -10,15 +10,13 @@
 options:
   parallelisation: 1      # kapps in this manifest must be installed in order,
                           # so parallelism is disabled for this manifest
-present:
+
+kapps:
   - id: terraform-remote-state
+    state: present    # if 'absent' (default) the kapp won't be installed or will be deleted (todo)
     sources:
-      - uri: git@github.com:sugarkube/kapps.git
-        branch: master
-        path: incubator/terraform-remote-state
-      - uri: git@github.com:sugarkube/kapps.git
-        branch: master
-        path: incubator/common-makefiles
+    - uri: git@github.com:sugarkube/kapps.git//incubator/terraform-remote-state#master
+    - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
     templates:
     # this kapp will remove the `.tmp` extension after creating an S3 bucket
     # for remote terraform state and copying the state over to it. That way
@@ -27,13 +25,10 @@ present:
   #        dest: terraform-remote-state/terraform_aws/_generated_backend.tf.tmp
 
   - id: hosted-zone
+    state: present
     sources:
-      - uri: git@github.com:sugarkube/kapps.git
-        branch: master
-        path: incubator/hosted-zone
-      - uri: git@github.com:sugarkube/kapps.git
-        branch: master
-        path: incubator/common-makefiles
+    - uri: git@github.com:sugarkube/kapps.git//incubator/hosted-zone#master
+    - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
     templates:
       - source: terraform/backend.tf
         dest: hosted-zone/terraform_aws/_generated_backend.tf

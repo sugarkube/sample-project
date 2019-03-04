@@ -3,66 +3,45 @@
 
 # Kapps listed under this key will be installed if they are not currently
 # installed in the target cluster.
-present:
+kapps:
   # This entry demonstrates how to explicitly declare values.
   #
   # Unique identifier. The same kapp can be installed multiple times provided
   # this is unique per instance. This will be the release name when using Helm.
   - id: wordpress-site1
+    state: present
     templates:        # a list of templates to render for this kapp
 #      - source: terraform/backend.tf  # source template must exist under one of the
                                       # 'template' directories declared in the stacks.yaml file
 #        dest: wordpress/_generated_backend.tf   # dest relative to the kapp root directory
 
-    installer:              # installer-specific values
-#      target: wordpress     # The target source (defined below) to run the makefile
-                            # for to install this kapp. Defaults to the
-                            # identifier (i.e. wordpress-site1)
-      values:
-      - site1-values        # A list of sources to search for cluster-specific
-                            # values files. Defaults to the main source
-                            # directory (in this case wordpress)
-      params:               # key values to set as env vars when calling the Makefile
-        namespace: wordpress-sites    # Explicitly set a parameter used by Helm
     # Sources to checkout as siblings in the cache for this kapp. This allows
     # creating a cache entry from e.g. the actual kapp source, a directory of
     # shared makefiles, and/or pulling in `values.yaml` files etc. from a
     # separately versioned source.
     sources:
-    - uri: git@github.com:sugarkube/kapps.git
-      branch: master
       # the name of this source defaults to `wordpress` because it's the last
       # component of the path. The name can also be set explicitly as
       # illustrated below.
-      path: incubator/wordpress
+    - uri: git@github.com:sugarkube/kapps.git//incubator/wordpress#master
 #      includeValues: false    # don't search this source for helm/terraform values
 # todo - implement these paths and uncomment as an example
-#    - uri: git@github.com:sugarkube/sugarkube.git
+#    - uri: git@github.com:sugarkube/sample-project.git
 #      branch: master
 #      # this lets us reuse the same kapp parameterised differently per instance
 #      path: examples/values/wordpress/site1/
-#      # Name of the source. Defaults to the last component of the path (in this
-#      # case `site1`). Also used as a key.
-#      name: site1-values
-    - uri: git@github.com:sugarkube/kapps.git
-      branch: master
-      path: incubator/common-makefiles
-    - uri: git@github.com:sugarkube/sample-project.git
-      branch: master
-      path: demo-data/wordpress/site1
-      name: data
+    - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
+    - id: data
+      uri: git@github.com:sugarkube/sample-project.git//demo-data/wordpress/site1#master
 
   - id: wordpress-site2
+    state: absent   # let's pretend this site is still in development and should only be installed
+                    # in stacks that explicitly override the state to 'present' (e.g. dev stacks)
     sources:
-    - uri: git@github.com:sugarkube/kapps.git
-      branch: master
-      #branch: wordpress-0.1.0
-      path: incubator/wordpress
-      name: wp-kapp
-    - uri: git@github.com:sugarkube/kapps.git
-      branch: master
-      path: incubator/common-makefiles
-    - uri: git@github.com:sugarkube/sample-project.git
-      branch: master
-      path: demo-data/wordpress/site2
-      name: data
+      # the implicit ID of this source is 'wordpress' because that's the last component of the path.
+      # Source IDs are used for namespacing in caches, and can also be used to override settings
+      # for a source from a stack config file.
+      - uri: git@github.com:sugarkube/kapps.git//incubator/wordpress#master # todo change to e.g. wordpress-0.1.0
+      - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
+      - id: data   # the ID can be explicitly defined
+        uri: git@github.com:sugarkube/sample-project.git//demo-data/wordpress/site2#master

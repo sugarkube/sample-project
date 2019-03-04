@@ -1,0 +1,37 @@
+defaults: &defaults
+  provider: local
+  provisioner: minikube
+  profile: local
+  providerVarsDirs:   # YAML files under here will be recursively merged. Used to configure
+  - ../providers/  # providers. Errors will be thrown if expected dirs don't exist.
+  kappVarsDirs:       # The values in YAML files in these directories will be recursively merged
+    - ../vars/    # into a single map/dict. The resulting values can be used to template
+      # files for kapps, or kapps can declare that they need them set as
+    # parameters/env vars in their `sugarkube.yaml` file.
+  templateDirs:
+    # todo - add support for searching in kapps first, so templates can be kept in kapps
+    - ../templates/    # Source template file directories. Manifests can refer to files in these
+      # directories to write templated files into kapps to parameterise them by
+    # cluster/provider/profile, etc.
+
+local-web:        # a local stack for web development
+  <<: *defaults
+  cluster: standard
+  manifests:        # Manifests are executed by running `sugarkube kapps apply`
+    # todo - support pulling these from git repos
+    - uri: ../manifests/10-bootstrap-cluster.yaml
+    - uri: ../manifests/40-wordpress-sites.yaml
+      id: 40-web-sites       # explicitly set the manifest ID. Will be used as a prefix to generate kapp IDs.
+
+# todo - document it's possible to run these stacks while overriding e.g. just the cluster
+# name to deploy there. Then we could have stacks for different tasks (e.g. opsy-stuff,
+# ci-cd, monitoring) and devs could just deploy them to their own cluster without
+# duplicating these different stacks, one per developer).
+local-ops:        # local stack for ops-type work
+  <<: *defaults
+  cluster: large
+  manifests:
+    # if no protocol is given, file:// is assumed.
+    - uri: ../manifests/10-bootstrap-cluster.yaml
+    - uri: ../manifests/20-security.yaml
+    - uri: ../manifests/30-ci-cd.yaml

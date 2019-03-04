@@ -1,7 +1,6 @@
-# defines a higher-specced local cluster
+# defines a higher-specced local cluster. Values here are merged with, and take precedence over,
+# values defined in `clusters/values.yaml`
 provisioner:
-  binary: minikube-0.30.0       # this allows invoking a specific version of the
-                                # minikube binary. It's more useful with kops.
   params:
     start:        # parameters for the `minikube start` command
       memory: 5120

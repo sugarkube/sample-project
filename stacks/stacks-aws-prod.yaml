@@ -1,0 +1,35 @@
+defaults: &defaults
+  provider: aws
+  provisioner: kops
+  account: prod
+  profile: prod
+  region: eu-west-2
+  providerVarsDirs:   # YAML files under here will be recursively merged. Used to configure
+    - ../providers/    # providers. Errors will be thrown if expected dirs don't exist.
+  kappVarsDirs:       # YAML files under these directories will be recursively merged
+    - ../vars/         # and values passed to kapps to alter them per profile/manifest/etc.
+  templateDirs:
+    - ../templates/    # paths to template files that can be used by kapps
+
+aws-prod:
+  <<: *defaults
+  cluster: prod
+  initManifests:
+    - uri: ../manifests/05-pre-launch-dependencies.yaml
+  manifests:
+    # if no protocol is given, file:// is assumed.
+    - uri: ../manifests/10-bootstrap-cluster.yaml
+    - uri: ../manifests/15-core-aws.yaml
+    - uri: ../manifests/20-security.yaml
+    - uri: ../manifests/30-ci-cd.yaml
+    - uri: ../manifests/40-wordpress-sites.yaml
+      id: web
+      # Data in manifests can be overridden in stack files like this to e.g. specify the branch of a source to be used
+      # or to modify the values of kapp variables. This lets you use a single manifest across multiple environments
+      # (e.g. dev/staging/prod) just tweaking a few values instead of maintaining multiplle different copies of manifests.
+      overrides:
+        present:
+          wordpress-site2:
+            sources:
+              kapp:
+                branch: 1.0.0   # a different value to in the dev stack
