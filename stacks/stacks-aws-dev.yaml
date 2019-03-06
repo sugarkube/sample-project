@@ -14,10 +14,9 @@ defaults: &defaults
 aws-dev1:
   <<: *defaults
   cluster: dev1
-  initManifests:
-    - uri: ../manifests/05-pre-launch-dependencies.yaml
   manifests:
     # if no protocol is given, file:// is assumed.
+    - uri: ../manifests/05-pre-launch-dependencies.yaml
     - uri: ../manifests/10-bootstrap-cluster.yaml
     - uri: ../manifests/15-core-aws.yaml
     - uri: ../manifests/20-security.yaml

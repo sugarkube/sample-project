@@ -31,4 +31,5 @@ kapps:
     - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
     templates:
       - source: terraform/backend.tf
-        dest: hosted-zone/terraform_aws/_generated_backend.tf
+        # you can use variables in source/dest paths, e.g.
+        dest: hosted-zone/terraform_aws/_generated_backend-{{ .stack.region }}.tf
