@@ -10,7 +10,7 @@ defaults: &defaults
     # parameters/env vars in their `sugarkube.yaml` file.
   templateDirs:
     # todo - add support for searching in kapps first, so templates can be kept in kapps
-    - ../templates/    # Source template file directories. Manifests can refer to files in these
+    - ../kapp-templates/    # Source template file directories. Manifests can refer to files in these
       # directories to write templated files into kapps to parameterise them by
     # cluster/provider/profile, etc.
 
