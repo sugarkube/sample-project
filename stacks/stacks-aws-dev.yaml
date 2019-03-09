@@ -16,12 +16,12 @@ aws-dev1:
   cluster: dev1
   manifests:
     # if no protocol is given, file:// is assumed.
-    - uri: ../manifests/05-pre-launch-dependencies.yaml
-    - uri: ../manifests/10-bootstrap-cluster.yaml
-    - uri: ../manifests/15-core-aws.yaml
-    - uri: ../manifests/20-security.yaml
-    - uri: ../manifests/30-ci-cd.yaml
-    - uri: ../manifests/40-wordpress-sites.yaml
+    - uri: ../manifests/pre-launch-dependencies.yaml
+    - uri: ../manifests/bootstrap-cluster.yaml
+    - uri: ../manifests/core-aws.yaml
+    - uri: ../manifests/security.yaml
+    - uri: ../manifests/ci-cd.yaml
+    - uri: ../manifests/wordpress-sites.yaml
       id: web
       # Data in manifests can be overridden in stack files like this to e.g. specify the branch of a source to be used
       # or to modify the values of kapp variables. This lets you use a single manifest across multiple environments

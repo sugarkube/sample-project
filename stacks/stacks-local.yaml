@@ -19,8 +19,8 @@ local-web:        # a local stack for web development
   cluster: standard
   manifests:        # Manifests are executed by running `sugarkube kapps apply`
     # todo - support pulling these from git repos
-    - uri: ../manifests/10-bootstrap-cluster.yaml
-    - uri: ../manifests/40-wordpress-sites.yaml
+    - uri: ../manifests/bootstrap-cluster.yaml
+    - uri: ../manifests/wordpress-sites.yaml
       id: 40-web-sites       # explicitly set the manifest ID. Will be used as a prefix to generate kapp IDs.
 
 # todo - document it's possible to run these stacks while overriding e.g. just the cluster
@@ -32,6 +32,6 @@ local-ops:        # local stack for ops-type work
   cluster: large
   manifests:
     # if no protocol is given, file:// is assumed.
-    - uri: ../manifests/10-bootstrap-cluster.yaml
-    - uri: ../manifests/20-security.yaml
-    - uri: ../manifests/30-ci-cd.yaml
+    - uri: ../manifests/bootstrap-cluster.yaml
+    - uri: ../manifests/security.yaml
+    - uri: ../manifests/ci-cd.yaml
