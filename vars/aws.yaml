@@ -1,1 +1,4 @@
+# This will apply to all AWS clusters
+root_hosted_zone: k8s.sugarkube.io
+
 cluster_name: "{{ .stack.cluster }}.{{ .stack.region }}.{{ .kapp.vars.root_hosted_zone }}"
