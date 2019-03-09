@@ -12,7 +12,7 @@ provisioner:
 
     create_cluster:       # Parameters for the `kops create cluster` command
       cloud: aws
-      bastion:
+      bastion: true
       api_loadbalancer_type: internal   # More kops settings. Underscores in keys
       dns: private                      # will be converted to hyphens and prepended
       authorization: RBAC               # with '--' to turn them into CLI args
