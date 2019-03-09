@@ -9,8 +9,14 @@ multiple times parameterised differently, so you could install it once at
 
 ## Directory structure
 The YAML files in this directory are hierarchically merged and the resulting 
-dictionary/map can be used to template files for kapps. Sugarkube will merge 
-files hierarchically (that is, from the root to leaves, with files closer to 
+dictionary/map can be used to template files for kapps. 
+
+**Note**: Any values found in files under these directories will be accessible 
+in the stack config dict under the key `.kapp.vars`. If you need tailor top-level
+values per cluster/region, etc. put those values into files under a directory
+listed under the `providerVarsDirs` stack config setting.
+
+Sugarkube will merge files hierarchically (that is, from the root to leaves, with files closer to 
 leaves overriding values higher up) by searching for directories with any 
 of the following names (with values coming from the configured stack): 
 
