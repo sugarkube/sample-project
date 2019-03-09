@@ -1,0 +1,5 @@
+provisioner:
+  params:
+    create_cluster:
+      master-zones: eu-west-2a
+      zones: eu-west-2a,eu-west-2b,eu-west-2c

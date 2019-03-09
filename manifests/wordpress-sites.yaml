@@ -8,7 +8,7 @@ kapps:
   #
   # Unique identifier. The same kapp can be installed multiple times provided
   # this is unique per instance. This will be the release name when using Helm.
-  - id: wordpress-site1
+  - id: site1
     state: present
     templates:        # a list of templates to render for this kapp
 #      - source: terraform/backend.tf  # source template must exist under one of the
@@ -34,7 +34,7 @@ kapps:
     - id: data
       uri: git@github.com:sugarkube/sample-project.git//demo-data/wordpress/site1#master
 
-  - id: wordpress-site2
+  - id: site2
     state: absent   # let's pretend this site is still in development and should only be installed
                     # in stacks that explicitly override the state to 'present' (e.g. dev stacks)
     sources:

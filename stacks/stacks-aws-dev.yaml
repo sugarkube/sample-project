@@ -22,7 +22,7 @@ aws-dev1:
     - uri: ../manifests/security.yaml
     - uri: ../manifests/ci-cd.yaml
     - uri: ../manifests/wordpress-sites.yaml
-      id: web
+      id: wordpress
       # Data in manifests can be overridden in stack files like this to e.g. specify the branch of a source to be used
       # or to modify the values of kapp variables. This lets you use a single manifest across multiple environments
       # (e.g. dev/staging/prod) just tweaking a few values instead of maintaining multiplle different copies of manifests.

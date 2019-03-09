@@ -1,0 +1,7 @@
+provisioner:
+  params:       # parameters to different kops commands
+    create_cluster:       # Parameters for the `kops create cluster` command
+      bastion: false
+      api_loadbalancer_type: public   # More kops settings. Underscores in keys
+      dns: public                      # will be converted to hyphens and prepended
+      topology: public
