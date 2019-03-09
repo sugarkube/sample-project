@@ -1,7 +1,7 @@
 provisioner:
   params:
     create_cluster:
-      # smaller instances, fewer masters
+      # smaller instances, fewer masters and nodes
       master_count: 1
       master_size: t3.small
       node_count: 2

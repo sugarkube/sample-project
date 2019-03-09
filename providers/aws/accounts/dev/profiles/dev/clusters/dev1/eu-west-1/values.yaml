@@ -1,0 +1,9 @@
+provisioner:
+  params:
+    create_cluster:
+    # override the AMI just for this cluster
+      image: ami-099b2d1bdd27b4649
+    # and the zone for worker nodes
+      zones: eu-west-1a,eu-west-1b
+    # the number of worker nodes
+      node_count: 4

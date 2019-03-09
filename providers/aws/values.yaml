@@ -1,4 +1,6 @@
-# Defaults for all clusters
+# Defaults for all clusters. Values here are suitable for prod because it's
+# safer to do that than to forget to update the prod config with bigger
+# instances, number of masters/nodes, etc.
 kube_context: "{{ .cluster_name }}"
 kops_state_bucket: "kops.{{ .cluster_name }}"
 
@@ -21,8 +23,20 @@ provisioner:
       master_size: t3.medium
       node_count: 2
       node_size: t3.medium
-      master-zones: "{{ .stack.region }}a,{{ .stack.region }}b,{{ .stack.region }}c"
-      zones: "{{ .stack.region }}a,{{ .stack.region }}b,{{ .stack.region }}c"
+      master-zones: |-      # automatically set the zones based on the number of masters
+        {{- if eq .provisioner.params.create_cluster.master_count 1 }}
+          {{ .stack.region }}a
+        {{ else }}
+          {{ .stack.region }}a,{{ .stack.region }}b,{{ .stack.region }}c
+        {{ end }}
+      zones:  |-      # automatically set the zones based on the number of nodes
+        {{- if eq .provisioner.params.create_cluster.node_count 1 }}
+          {{ .stack.region }}a
+        {{ else if eq .provisioner.params.create_cluster.node_count 2 }}
+          {{ .stack.region }}a,{{ .stack.region }}b
+        {{ else }}
+          {{ .stack.region }}a,{{ .stack.region }}b,{{ .stack.region }}c
+        {{ end }}
 
     rolling_update:
       node_interval: 4m0s

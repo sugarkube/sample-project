@@ -1,0 +1,7 @@
+# Values from the `dev` profile can be overridden here:
+provisioner:
+  params:
+    create_cluster:
+      # Use smaller instances in this cluster (applies to all regions)
+      master_size: t2.micro
+      node_size: t2.micro
