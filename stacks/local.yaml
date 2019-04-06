@@ -21,6 +21,9 @@ local-web:        # a local stack for web development
     - uri: ../manifests/bootstrap-cluster.yaml
     - uri: ../manifests/wordpress-sites.yaml
       id: wordpress       # explicitly set the manifest ID. Will be used as a prefix to generate kapp IDs.
+      overrides:
+        site2:
+          state: present    # explicitly enable this site we're pretending is still in dev
 
 # todo - document it's possible to run these stacks while overriding e.g. just the cluster
 # name to deploy there. Then we could have stacks for different tasks (e.g. opsy-stuff,
