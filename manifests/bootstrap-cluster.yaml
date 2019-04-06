@@ -39,9 +39,9 @@ kapps:
 
   # The default installer for manifests is stored in config so we don't need
   # to add it to every entry. But we could in future with e.g. `installer: my-installer`
-  - id: ingress      # this can be anything - it doesn't need to relate to the name of any source
+  - id: nginx-ingress      # this can be anything - it doesn't need to relate to the name of any source
     state: present
     sources:
-    - id: ingress
+    - id: nginx-ingress
       uri: git@github.com:sugarkube/kapps.git//incubator/nginx-ingress#master  #branch: nginx-ingress-0.1.0
     - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
