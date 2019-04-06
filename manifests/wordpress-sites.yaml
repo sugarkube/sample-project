@@ -10,7 +10,7 @@ kapps:
   # this is unique per instance. This will be the release name when using Helm.
   - id: site1
     state: present
-    templates:        # a list of templates to render for this kapp
+#    templates:        # a list of templates to render for this kapp
 #      - source: terraform/backend.tf  # source template must exist under one of the
                                       # 'template' directories declared in the stacks.yaml file
 #        dest: wordpress/_generated_backend.tf   # dest relative to the kapp root directory
@@ -33,6 +33,8 @@ kapps:
     - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
     - id: data
       uri: git@github.com:sugarkube/sample-project.git//demo-data/wordpress/site1#master
+    vars:
+      namespace: wordpress-site1      # different namespace
 
   - id: site2
     state: absent   # let's pretend this site is still in development and should only be installed
