@@ -35,6 +35,10 @@ kapps:
       uri: git@github.com:sugarkube/sample-project.git//demo-data/wordpress/site1#master
     vars:
       namespace: wordpress-site1      # different namespace
+      hostname: site1.localhost
+    templates:
+      - source: terraform/backend.tf
+        dest: "terraform_{{ .stack.provider }}/_generated_backend.tf"
 
   - id: site2
     state: absent   # let's pretend this site is still in development and should only be installed
@@ -47,3 +51,8 @@ kapps:
       - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
       - id: data   # the ID can be explicitly defined
         uri: git@github.com:sugarkube/sample-project.git//demo-data/wordpress/site2#master
+    vars:
+      hostname: site2.localhost
+    templates:
+      - source: terraform/backend.tf
+        dest: "terraform_{{ .stack.provider }}/_generated_backend.tf"
