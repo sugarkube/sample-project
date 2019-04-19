@@ -2,64 +2,6 @@
 # safer to do that than to forget to update the prod config with bigger
 # instances, number of masters/nodes, etc.
 kube_context: "{{ .cluster_name }}"
-kops_state_bucket: "kops.{{ .cluster_name }}"
-
-provisioner:
-  params:       # parameters to different kops commands
-    global:     # these are applied to all commands
-      name: "{{ .cluster_name }}"
-      state: "s3://{{ .kops_state_bucket }}"
-
-    create_cluster:       # Parameters for the `kops create cluster` command
-      cloud: aws
-      bastion: true
-      api_loadbalancer_type: internal   # More kops settings. Underscores in keys
-      dns: private                      # will be converted to hyphens and prepended
-      authorization: RBAC               # with '--' to turn them into CLI args
-      networking: calico
-      encrypt_etcd_storage:
-      topology: private
-      master_count: 3         # settings for production-quality clusters. Dev clusters override this
-      master_size: t3.medium
-      node_count: 2
-      node_size: t3.medium
-      master-zones: |-      # automatically set the zones based on the number of masters
-        {{- if eq .provisioner.params.create_cluster.master_count 1 }}
-          {{ .stack.region }}a
-        {{ else }}
-          {{ .stack.region }}a,{{ .stack.region }}b,{{ .stack.region }}c
-        {{ end }}
-      zones:  |-      # automatically set the zones based on the number of nodes
-        {{- if eq .provisioner.params.create_cluster.node_count 1 }}
-          {{ .stack.region }}a
-        {{ else if eq .provisioner.params.create_cluster.node_count 2 }}
-          {{ .stack.region }}a,{{ .stack.region }}b
-        {{ else }}
-          {{ .stack.region }}a,{{ .stack.region }}b,{{ .stack.region }}c
-        {{ end }}
-
-    rolling_update:
-      node_interval: 4m0s
-
-  specs:                              # The kops config will be downloaded and this
-    cluster:                          # will be patched into the spec before
-      docker:                         # applying it to update the cluster config.
-        logLevel: warn                # This allows kops clusters to be fully
-        logOpt:                       # customised and updated automatically.
-          - max-size=10m
-          - max-file=5
-        logDriver: json-file
-        ipMasq: true
-        ipTables: true
-    instanceGroups:
-      nodes:                    # name of the instance group
-        nodeLabels:
-          kops.k8s.io/test: test-label
-        cloudLabels:
-          project: test-project-label
-        maxSize: 1          # change these then run `sugarkube cluster update -n aws-dev -s examples/stacks.yaml`
-        minSize: 1          # and watch the config changes take effect
-
 
 # Lists IDs of trusted GPG keys. Clusters with `require_signed_tags=true` will
 # reject any git tags that haven't been signed by one of the keys listed here.
