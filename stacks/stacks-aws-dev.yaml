@@ -9,7 +9,7 @@ defaults: &defaults
   kappVarsDirs:       # YAML files under these directories will be recursively merged
     - ../kapp-vars/         # and values passed to kapps to alter them per profile/manifest/etc.
   templateDirs:
-    - ../kapp-templates/    # paths to template files that can be used by kapps
+    - ../templates/    # paths to template files that can be used by kapps
 
 aws-dev1:
   <<: *defaults
