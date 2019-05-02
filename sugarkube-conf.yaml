@@ -1,6 +1,31 @@
 #log-level: none
 #json-logs: false
 
+# Dynamically searches for terraform tfvars files based on the current stack provider and various properties of the
+# stack (e.g. name, region, etc.) as well as any generated files. All files found are prepended by `-var-file`
+tf-patterns: &tf-patterns
+  tf-params: >
+    {{ mapPrintF "terraform_%s/.*defaults.tfvars$" (listString .stack.provider) | findFiles .kapp.cacheRoot | mapPrintF "-var-file %s" | uniq | join " " | trim }}
+    {{ mapPrintF (mapPrintF "terraform_%s/.*%%s.tfvars$" (listString .stack.provider) | join "") (.sugarkube.defaultVars | removeEmpty) | findFiles .kapp.cacheRoot | mapPrintF "-var-file %s" | uniq | join " " | trim }}
+    {{ mapPrintF "terraform_%s/.*_generated_.*.tfvars$" (listString .stack.provider) | findFiles .kapp.cacheRoot | mapPrintF "-var-file %s" | uniq | join " " | trim }}
+
+# Search for parameters dynamically. The `findFiles` function takes a list of
+# file name patterns and a starting directory to search from. It then recursively
+# searches for a single file matching the pattern. If one (and only one) is found,
+# it's returned in the result array. Patterns that don't match any files are
+# filtered out.
+#
+# The `.sugarkube.defaultVars` variable is a list populated at runtime containing (in
+# order of precedence: provider, account, profile, cluster, region.
+#
+# So these scary looking things search for a values.yaml file in the kapp cache directory, as well as
+# `values-<provider/account/profile/etc>.yaml` and prepends '-f' ready to be passed as options to helm.
+helm-patterns: &helm-patterns
+  helm-params: >
+    {{ listString "/values.yaml$" | findFiles .kapp.cacheRoot | mapPrintF "-f %s" | uniq | join " " | trim }}
+    {{ mapPrintF "/values-%s.yaml$" (.sugarkube.defaultVars | removeEmpty) | findFiles .kapp.cacheRoot | mapPrintF "-f %s" | uniq | join " " | trim }}
+    {{ listString "/_generated_.*.yaml$" | findFiles .kapp.cacheRoot | mapPrintF "-f %s" | uniq | join " " | trim }}
+
 programs:
   helm:
     vars:
@@ -17,32 +42,15 @@ programs:
     args:
       make:
         install:
-          # Search for parameters dynamically. The `findFiles` function takes a list of
-          # file name patterns and a starting directory to search from. It then recursively
-          # searches for a single file matching the pattern. If one (and only one) is found,
-          # it's returned in the result array. Patterns that don't match any files are
-          # filtered out.
-          #
-          # The `.sugarkube.defaultVars` variable is a list populated at runtime containing (in
-          # order of precedence: provider, account, profile, cluster, region.
-          #
-          # So this horrific looking value searches for a file called 'values.yaml' under the kapp
-          # cache directory, then files called `values-<provider/account/profile/etc>.yaml`. It takes
-          # all files that exists and prepends '-f' to them so they'll be passed as options to helm.
-          #
-          - name: helm-params
-            value: |-
-              "{{ listString "/values.yaml$" | findFiles .kapp.cacheRoot | uniq | join "-f " }} {{ mapPrintF "/values-%s.yaml$" .sugarkube.defaultVars | findFiles .kapp.cacheRoot | mapPrintF "-f %s" | uniq | join " " }}"
-
+          <<: *helm-patterns
         delete:
-          - name: helm-params
-            value: |-
-              "{{ listString "/values.yaml$" | findFiles .kapp.cacheRoot | uniq | join "-f " }} {{ mapPrintF "/values-%s.yaml$" .sugarkube.defaultVars | findFiles .kapp.cacheRoot | mapPrintF "-f %s" | uniq | join " " }}"
+          <<: *helm-patterns
 
   kubectl:
     vars:
       kubeconfig: "{{ .kubeconfig }}"
       kube_context: "{{ .kube_context }}"
+      namespace: "{{ .kapp.id }}"
 
   aws:
     vars:
@@ -53,23 +61,14 @@ programs:
       region: "{{ .stack.region }}"
       project: "{{ .project }}"
 
-    templates:
-      - source: terraform/backend.tf
-        dest: "terraform_{{ .stack.provider }}/_generated_backend.tf"
-
-    # todo - uncomment once viper supports not lowercasing all map keys
-#    envVars:
-#      RUN_TERRAFORM: |-
-#        "{{ if isSet .kapp.vars "run_terraform" }}{{ .kapp.vars.run_terraform }}{{ else }}true{{ end }}"
+    envVars:
+      RUN_TERRAFORM: |-
+        "{{ if isSet .kapp.vars "run_terraform" }}{{ .kapp.vars.run_terraform }}{{ else }}true{{ end }}"
     args:
       make:
         install:
-          # search for terraform vars files under `terraform_<provider>`
-          - name: tf-params
-            value: |-
-              "{{ listString (printf "terraform_%s/.*/defaults.tfvars" .stack.provider) | findFiles .kapp.cacheRoot | uniq | join "-var-file " }} {{ mapPrintF (printf "terraform_%s/.*/%%s.tfvars" .stack.provider) .sugarkube.defaultVars | findFiles .kapp.cacheRoot | mapPrintF "-var-file %s" | uniq | join " " }}"
-
+          <<: *tf-patterns
         delete:
-          - name: tf-params
-            value: |-
-              "{{ listString (printf "terraform_%s/.*/defaults.tfvars" .stack.provider) | findFiles .kapp.cacheRoot | uniq | join "-var-file " }} {{ mapPrintF (printf "terraform_%s/.*/%%s.tfvars" .stack.provider) .sugarkube.defaultVars | findFiles .kapp.cacheRoot | mapPrintF "-var-file %s" | uniq | join " " }}"
+          <<: *tf-patterns
+        output:
+          <<: *tf-patterns
