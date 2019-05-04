@@ -63,7 +63,7 @@ programs:
 
     envVars:
       RUN_TERRAFORM: |-
-        "{{ if isSet .kapp.vars "run_terraform" }}{{ .kapp.vars.run_terraform }}{{ else }}true{{ end }}"
+        {{ if isSet .kapp.vars "run_terraform" }}{{ .kapp.vars.run_terraform }}{{ else }}true{{ end }}
     args:
       make:
         install:
