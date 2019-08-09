@@ -17,7 +17,7 @@ aws-dev1:
   manifests:
     # if no protocol is given, file:// is assumed.
     - uri: ../manifests/pre-launch-dependencies.yaml
-    - uri: ../manifests/bootstrap-cluster.yaml
+    - uri: ../manifests/bootstrap.yaml
     - uri: ../manifests/core-aws.yaml
     - uri: ../manifests/security.yaml
     - uri: ../manifests/ci-cd.yaml

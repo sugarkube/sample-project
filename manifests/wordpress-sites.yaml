@@ -1,6 +1,6 @@
 defaults:
   depends_on:   # all kapps in this manifest depend on these other kapps
-    - bootstrap-cluster:nginx-ingress
+    - bootstrap:nginx-ingress
 
 # This manifest contains kapps that represent the actual products you're shipping,
 # in this case web sites.
