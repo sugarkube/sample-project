@@ -4,11 +4,11 @@ defaults: &defaults
   account: prod
   profile: prod
   region: eu-west-2
-  providerVarsDirs:   # YAML files under here will be recursively merged. Used to configure
+  provider_vars_dirs:   # YAML files under here will be recursively merged. Used to configure
     - ../providers/    # providers. Errors will be thrown if expected dirs don't exist.
-  kappVarsDirs:       # YAML files under these directories will be recursively merged
+  kapp_vars_dirs:       # YAML files under these directories will be recursively merged
     - ../kapp-vars/         # and values passed to kapps to alter them per profile/manifest/etc.
-  templateDirs:
+  template_dirs:
     - ../templates/    # paths to template files that can be used by kapps
 
 aws-prod:
