@@ -1,7 +1,7 @@
 defaults: &defaults
   provider: local
   provisioner: minikube
-  profile: local
+  profile: minikube
   provider_vars_dirs:   # YAML files under here will be recursively merged. Used to configure
   - ../providers/  # providers. Errors will be thrown if expected dirs don't exist.
   kapp_vars_dirs:       # The values in YAML files in these directories will be recursively merged
