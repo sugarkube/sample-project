@@ -1,3 +1,7 @@
+defaults:
+  depends_on:
+    - bootstrap:cert-manager
+
 # A security layer. In this case it installs Keycloak which can be used as an OIDC provider
 # (but this kapp so far just installs it - it doesn't configure it as yet).
 kapps:

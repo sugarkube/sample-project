@@ -1,3 +1,7 @@
+defaults:
+  depends_on:
+    - bootstrap:cert-manager
+
 kapps:
   - id: jenkins
     state: present
