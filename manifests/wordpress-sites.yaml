@@ -1,5 +1,6 @@
 defaults:
   depends_on:   # all kapps in this manifest depend on these other kapps
+    - bootstrap:cert-manager
     - bootstrap:nginx-ingress
 
 # This manifest contains kapps that represent the actual products you're shipping,
@@ -22,23 +23,23 @@ kapps:
       # the name of this source defaults to `wordpress` because it's the last
       # component of the path. The name can also be set explicitly as
       # illustrated below.
-    - uri: git@github.com:sugarkube/kapps.git//incubator/wordpress#master
-#      includeValues: false    # don't search this source for helm/terraform values
-# todo - implement these paths and uncomment as an example
-#    - uri: git@github.com:sugarkube/sample-project.git
-#      branch: master
-#      # this lets us reuse the same kapp parameterised differently per instance
-#      path: examples/values/wordpress/site1/
-    - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
-    - id: data
-      uri: git@github.com:sugarkube/sample-project.git//demo-data/wordpress/site1#master
+      - uri: git@github.com:sugarkube/kapps.git//incubator/wordpress#master
+      #      includeValues: false    # don't search this source for helm/terraform values
+      # todo - implement these paths and uncomment as an example
+      #    - uri: git@github.com:sugarkube/sample-project.git
+      #      branch: master
+      #      # this lets us reuse the same kapp parameterised differently per instance
+      #      path: examples/values/wordpress/site1/
+      - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
+      - id: data
+        uri: git@github.com:sugarkube/sample-project.git//demo-data/wordpress/site1#master
     vars:
       namespace: wordpress-site1      # different namespace
       hostname: site1.localhost
 
   - id: site2
     state: absent   # let's pretend this site is still in development and should only be installed
-                    # in stacks that explicitly override the state to 'present' (e.g. dev stacks)
+    # in stacks that explicitly override the state to 'present' (e.g. dev stacks)
     sources:
       # the implicit ID of this source is 'wordpress' because that's the last component of the path.
       # Source IDs are used for namespacing in caches, and can also be used to override settings

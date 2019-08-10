@@ -8,15 +8,15 @@
 # kapps for your provider or create a `terraform_<provider>` directory in each
 # one so a single kapp can support multiple clouds.
 options:
-  parallelisation: 1      # kapps in this manifest must be installed in order,
-                          # so parallelism is disabled for this manifest
+  sequential: true      # kapps in this manifest must be installed in order. This makes each kapp depend on
+                        # the preceding one without needing to explicitly define each dependency.
 
 kapps:
   - id: terraform-remote-state
     state: present    # if 'absent' (default) the kapp won't be installed or will be deleted (todo)
     sources:
-    - uri: git@github.com:sugarkube/kapps.git//incubator/terraform-remote-state#master
-    - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
+      - uri: git@github.com:sugarkube/kapps.git//incubator/terraform-remote-state#master
+      - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
     templates:
     # this kapp will remove the `.tmp` extension after creating an S3 bucket
     # for remote terraform state and copying the state over to it. That way
@@ -27,8 +27,8 @@ kapps:
   - id: hosted-zone
     state: present
     sources:
-    - uri: git@github.com:sugarkube/kapps.git//incubator/hosted-zone#master
-    - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
+      - uri: git@github.com:sugarkube/kapps.git//incubator/hosted-zone#master
+      - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
     templates:
       - source: terraform/backend.tf
         # you can use variables in source/dest paths, e.g.

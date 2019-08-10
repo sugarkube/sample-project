@@ -1,10 +1,11 @@
 defaults:
-  depends_on:
+  depends_on:   # all kapps in this manifest depend on these other kapps
     - bootstrap:cert-manager
+    - bootstrap:nginx-ingress
 
 kapps:
   - id: jenkins
     state: present
     sources:
-    - uri: git@github.com:sugarkube/kapps.git//incubator/jenkins#master    #branch: jenkins-0.1.0
-    - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
+      - uri: git@github.com:sugarkube/kapps.git//incubator/jenkins#master    #branch: jenkins-0.1.0
+      - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
