@@ -1,4 +1,2 @@
 # This will apply to all providers
-root_hosted_zone: k8s.sugarkube.io
-cluster_name: "{{ .stack.cluster }}.{{ .stack.region }}.{{ .root_hosted_zone }}"
 project: demo

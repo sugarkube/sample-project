@@ -7,3 +7,6 @@ kube_context: "{{ .cluster_name }}"
 # reject any git tags that haven't been signed by one of the keys listed here.
 #trusted_gpg_keys:
 #- 123412341234       # todo - support this (currently not implemented)
+
+root_hosted_zone: k8s.sugarkube.io
+cluster_name: "{{ .stack.cluster }}.{{ .stack.region }}.{{ .root_hosted_zone }}"

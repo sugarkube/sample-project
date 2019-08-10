@@ -44,7 +44,3 @@ kapps:
     sources:
       - uri: git@github.com:sugarkube/kapps.git//incubator/nginx-ingress#master  #branch: nginx-ingress-0.1.0
       - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
-    outputs:
-      - format: yaml
-        id: values
-        path: values.yaml
