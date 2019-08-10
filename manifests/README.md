@@ -11,5 +11,14 @@ in parallel. You can control parallelisation by using an `options` block:
 
 ```
 options:
-  parallelisation: 1      # run sequentially (i.e. with a single thread)
+  sequential: true      # run sequentially (i.e. single-threaded, with each kapp 
+                        # depending on the previous one)
+```
+
+Or by declaring dependencies between kapps:
+```
+defaults:
+  depends_on:   # all kapps in this manifest depend on these other kapps
+    - bootstrap:cert-manager
+    - bootstrap:nginx-ingress
 ```
