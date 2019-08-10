@@ -1,0 +1,2 @@
+root_hosted_zone: localhost
+cluster_name: "{{ .root_hosted_zone }}"

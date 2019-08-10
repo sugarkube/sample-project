@@ -1,3 +1,0 @@
-# todo - decide where to put this. It'd be nice to use xip.io, but how can we
-# inject the cluster IP?
-hosted_zone: localhost            # The domain to host stuff under when running locally
