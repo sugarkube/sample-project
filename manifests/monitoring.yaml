@@ -1,0 +1,17 @@
+defaults:
+  depends_on:   # all kapps in this manifest depend on these other kapps
+    - bootstrap:cert-manager
+    - bootstrap:nginx-ingress
+
+kapps:
+  - id: prometheus
+    state: present
+    sources:
+      - uri: git@github.com:sugarkube/kapps.git//incubator/prometheus#master    #branch: prometheus-0.1.0
+      - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
+
+  - id: grafana
+    state: present
+    sources:
+      - uri: git@github.com:sugarkube/kapps.git//incubator/grafana#master    #branch: grafana-0.1.0
+      - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master

@@ -37,3 +37,4 @@ local-ops:        # local stack for ops-type work
     - uri: ../manifests/bootstrap.yaml
     - uri: ../manifests/security.yaml
     - uri: ../manifests/ci-cd.yaml
+    - uri: ../manifests/monitoring.yaml
