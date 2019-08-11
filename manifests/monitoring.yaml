@@ -4,6 +4,8 @@ defaults:
     - bootstrap:nginx-ingress
 
 kapps:
+  # we could define a prometheus instance CRD and have the operator create it, but for simplicity let's
+  # just install the standalone kapp which uses helm
   - id: prometheus
     state: present
     sources:
