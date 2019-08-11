@@ -4,14 +4,6 @@ defaults:
     - bootstrap:nginx-ingress
 
 kapps:
-  # we could define a prometheus instance CRD and have the operator create it, but for simplicity let's
-  # just install the standalone kapp which uses helm
-  - id: prometheus
-    state: present
-    sources:
-      - uri: git@github.com:sugarkube/kapps.git//incubator/prometheus#master    #branch: prometheus-0.1.0
-      - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
-
   - id: prometheus-operator
     state: present
     sources:
