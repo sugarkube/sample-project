@@ -31,7 +31,7 @@ local-web:        # a local stack for web development
 # duplicating these different stacks, one per developer).
 local-ops:        # local stack for ops-type work
   <<: *defaults
-  cluster: large
+  cluster: ops
   manifests:
     # if no protocol is given, file:// is assumed.
     - uri: ../manifests/bootstrap.yaml

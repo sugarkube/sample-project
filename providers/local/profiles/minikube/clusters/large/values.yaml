@@ -1,8 +1,0 @@
-# defines a higher-specced local cluster. Values here are merged with, and take precedence over,
-# values defined in `clusters/values.yaml`
-provisioner:
-  params:
-    start:        # parameters for the `minikube start` command
-      memory: 5120
-      cpus: 4
-      disk_size: 100g
