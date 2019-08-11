@@ -36,5 +36,5 @@ local-ops:        # local stack for ops-type work
     # if no protocol is given, file:// is assumed.
     - uri: ../manifests/bootstrap.yaml
     - uri: ../manifests/security.yaml
-    - uri: ../manifests/ci-cd.yaml
     - uri: ../manifests/monitoring.yaml
+    - uri: ../manifests/ci-cd.yaml
