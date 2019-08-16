@@ -2,31 +2,6 @@ log_level: none
 #json_logs: false
 #no_color: true
 
-# Dynamically searches for terraform tfvars files based on the current stack provider and various properties of the
-# stack (e.g. name, region, etc.) as well as any generated files. All files found are prepended by `-var-file`
-tf_patterns: &tf_patterns
-  tf_params: >-
-    {{ mapPrintF "terraform_%s/.*defaults\\.tfvars$" (listString .stack.provider) | findFiles .kapp.cacheRoot | mapPrintF "-var-file %s" | uniq | join " " | trim }}
-    {{ mapPrintF (mapPrintF "terraform_%s/.*%%s\\.tfvars$" (listString .stack.provider) | join "") (.sugarkube.defaultVars | removeEmpty) | findFiles .kapp.cacheRoot | mapPrintF "-var-file %s" | uniq | join " " | trim }}
-    {{ mapPrintF "terraform_%s/.*_generated_.*\\.tfvars$" (listString .stack.provider) | findFiles .kapp.cacheRoot | mapPrintF "-var-file %s" | uniq | join " " | trim }}
-
-# Search for parameters dynamically. The `findFiles` function takes a list of
-# file name patterns and a starting directory to search from. It then recursively
-# searches for a single file matching the pattern. If one (and only one) is found,
-# it's returned in the result array. Patterns that don't match any files are
-# filtered out.
-#
-# The `.sugarkube.defaultVars` variable is a list populated at runtime containing (in
-# order of precedence: provider, account, profile, cluster, region.
-#
-# So these scary looking things search for a values.yaml file in the kapp cache directory, as well as
-# `values-<provider/account/profile/etc>.yaml` and prepends '-f' ready to be passed as options to helm.
-helm_patterns: &helm_patterns
-  helm_params: >-
-    {{ listString "/values\\.yaml$" | findFiles .kapp.cacheRoot | mapPrintF "-f %s" | uniq | last | join " " | trim }}
-    {{ mapPrintF "/values-%s\\.yaml$" (.sugarkube.defaultVars | removeEmpty) | findFiles .kapp.cacheRoot | mapPrintF "-f %s" | uniq | join " " | trim }}
-    {{ listString "/_generated_.*\\.yaml$" | findFiles .kapp.cacheRoot | mapPrintF "-f %s" | uniq | join " " | trim }}
-
 programs:
   helm:
     vars:
@@ -37,48 +12,68 @@ programs:
       tiller_namespace: kube-system
       helm: helm        # path to the helm binary to run. This allows version pinning if you have multiple versions of helm on your machine.
       run_helm: true    # none of these units will be run for a kapp if this is false because of the associated condition
-      <<: *helm_patterns
-
-    args:
-      make:
-        install:
-          helm-params: "{{ .kapps.vars.helm_params }}"
-        delete:
-          helm-params: "{{ .kapps.vars.helm_params }}"
+      # Search for parameters dynamically. The `findFiles` function takes a list of
+      # file name patterns and a starting directory to search from. It then recursively
+      # searches for a single file matching the pattern. If one (and only one) is found,
+      # it's returned in the result array. Patterns that don't match any files are
+      # filtered out.
+      #
+      # The `.sugarkube.defaultVars` variable is a list populated at runtime containing (in
+      # order of precedence: provider, account, profile, cluster, region.
+      #
+      # So these scary looking things search for a values.yaml file in the kapp cache directory, as well as
+      # `values-<provider/account/profile/etc>.yaml` and prepends '-f' ready to be passed as options to helm.
+      helm_params: >-
+        {{ listString "/values\\.yaml$" | findFiles .kapp.cacheRoot | mapPrintF "-f=%s" | uniq | last | list }}
+        {{ mapPrintF "/values-%s\\.yaml$" (.sugarkube.defaultVars | removeEmpty) | findFiles .kapp.cacheRoot | mapPrintF "-f=%s" | uniq }}
+        {{ listString "/_generated_.*\\.yaml$" | findFiles .kapp.cacheRoot | mapPrintF "-f=%s" | uniq }}
 
     run_units:
       helm:
-        working_dir: "{{ .kapp.cacheRoot }}"       # directory to use as the working directory
+        working_dir: "{{ .kapp.cacheRoot }}/{{ .kapp.id }}"       # directory to use as the working directory
         conditions:       # all must be true for any units to be run
           - "{{ .kapp.vars.run_helm }}"
         plan_install:
           - name: helm-lint
-            command: |
-              KUBECONFIG={{ .kapp.vars.kubeconfig }} {{ .kapp.vars.helm }} lint \
-                --kube-context={{ .kapp.vars.kube_context }} \
-                --namespace={{ .kapp.vars.namespace }} . {{ .kapp.vars.helm_params }}
+            command: "{{ .kapp.vars.helm }}"
+            args:
+              - lint
+              - --kube-context={{ .kapp.vars.kube_context }}
+              - --namespace={{ .kapp.vars.namespace }}
+              - .
+              - "{{ .kapp.vars.helm_params }}"          # this nested list will be flattened and appended to the main args list. Empty lists will be filtered out.
+            env_vars:
+              KUBECONFIG: "{{ .kapp.vars.kubeconfig }}"
         apply_install:
           - name: helm-install
-            command: |
-              KUBECONFIG={{ .kapp.vars.kubeconfig }} {{ .kapp.vars.helm }} upgrade \
-                --kube-context={{ .kapp.vars.kube_context }} \
-                --tiller-namespace={{ .kapp.vars.tiller_namespace }} \
-                --wait \
-                --install \
-                --recreate-pods \
-                --timeout 600 \
-                --namespace={{ .kapp.vars.namespace }} \
-                {{ .kapp.vars.release }} . {{ .kapp.vars.helm_params }}
+            command: "{{ .kapp.vars.helm }}"
+            args:
+              - upgrade
+              - --kube-context={{ .kapp.vars.kube_context }}
+              - --tiller-namespace={{ .kapp.vars.tiller_namespace }}
+              - --wait
+              - --install
+              - --recreate-pods
+              - --timeout=600
+              - --namespace={{ .kapp.vars.namespace }}
+              - "{{ .kapp.vars.release }}"
+              - .
+              - "{{ .kapp.vars.helm_params }}"
+            env_vars:
+              KUBECONFIG: "{{ .kapp.vars.kubeconfig }}"
             merge_priority: 30         # install helm charts *after* running terraform if terraform is used. By default
             # terraform output will have been generated and loaded.
         apply_delete:
           - name: helm-delete
-            command: |
-              KUBECONFIG={{ .kapp.vars.kubeconfig }} {{ .kapp.vars.helm }} delete \
-                --kube-context={{ .kapp.vars.kube_context }} \
-                --tiller-namespace={{ .kapp.vars.tiller_namespace }} \
-                --purge \
-                {{ .kapp.vars.release }}
+            command: "{{ .kapp.vars.helm }}"
+            args:
+              - delete
+              - --kube-context={{ .kapp.vars.kube_context }}
+              - --tiller-namespace={{ .kapp.vars.tiller_namespace }}
+              - --purge
+              - "{{ .kapp.vars.release }}"
+            env_vars:
+              KUBECONFIG: "{{ .kapp.vars.kubeconfig }}"
             merge_priority: 10         # delete helm charts *before* running terraform (we don't use 0 so you can insert your own steps before this one)
 
   kubectl:
@@ -86,6 +81,7 @@ programs:
       kubeconfig: "{{ .kubeconfig }}"
       kube_context: "{{ .kube_context }}"
       namespace: "{{ .kapp.id }}"
+      kubectl: kubectl
 
   aws:
     vars:
@@ -100,16 +96,12 @@ programs:
       terraform_dir: "{{ .kapp.cacheRoot }}/{{ .kapp.id }}/terraform_{{ .stack.provider }}"
       tf_output_path: _generated_terraform_output.json
       tf_plan_path: _generated_plan.tfplan
-      <<: *tf_patterns
-
-    args:
-      make:
-        install:
-          tf-patterns: "{{ .kapp.vars.tf_patterns }}"
-        delete:
-          tf-patterns: "{{ .kapp.vars.tf_patterns }}"
-        output:
-          tf-patterns: "{{ .kapp.vars.tf_patterns }}"
+      # Dynamically searches for terraform tfvars files based on the current stack provider and various properties of the
+      # stack (e.g. name, region, etc.) as well as any generated files. All files found are prepended by `-var-file`
+      tf_params: >-
+        {{ mapPrintF "terraform_%s/.*defaults\\.tfvars$" (listString .stack.provider) | findFiles .kapp.cacheRoot | mapPrintF "-var-file %s" | uniq | join " " | trim }}
+        {{ mapPrintF (mapPrintF "terraform_%s/.*%%s\\.tfvars$" (listString .stack.provider) | join "") (.sugarkube.defaultVars | removeEmpty) | findFiles .kapp.cacheRoot | mapPrintF "-var-file %s" | uniq | join " " | trim }}
+        {{ mapPrintF "terraform_%s/.*_generated_.*\\.tfvars$" (listString .stack.provider) | findFiles .kapp.cacheRoot | mapPrintF "-var-file %s" | uniq | join " " | trim }}
 
     run_units:
       terraform:
@@ -119,19 +111,35 @@ programs:
           - "{{ exists \"d\" .kapp.vars.terraform_dir }}"          # won't run these if there's no terraform_<provider> directory (e.g. for local providers)
         plan_install:
           - name: tf-init
-            command: "{{ .kapp.vars.terraform }} init"
+            command: "{{ .kapp.vars.terraform }}"
+            args:
+              - init
             conditions:       # additional conditions for this specific step to be run. These must all be truthy for the command to be executed.
               # only run if terraform hasn't already initialised (i.e. no .terraform directory exists)
               - "{{ exists \"d\" \"{{ .kapp.vars.terraform_dir }}/.terraform\" | not }}"
           - name: tf-format
-            command: "{{ .kapp.vars.terraform }} fmt"
+            command: "{{ .kapp.vars.terraform }}"
+            args:
+              - fmt
           - name: tf-validate
-            command: "{{ .kapp.vars.terraform }} validate {{ .kapp.vars.tf_params }}"
+            command: "{{ .kapp.vars.terraform }}"
+            args:
+              - validate
+              - "{{ .kapp.vars.tf_params }}"
           - name: tf-plan
-            command: "{{ .kapp.vars.terraform }} plan -refresh=true -out {{ .kapp.vars.tf_plan_path }} {{ .kapp.vars.tf_params }}"
+            command: "{{ .kapp.vars.terraform }}"
+            args:
+              - plan
+              - -refresh=true
+              - -out
+              - "{{ .kapp.vars.tf_plan_path }}"
+              - "{{ .kapp.vars.tf_params }}"
         apply_install:
           - name: tf-apply
-            command: "{{ .kapp.vars.terraform }} apply {{ .kapp.vars.tf_plan_path }}"
+            command: "{{ .kapp.vars.terraform }}"
+            args:
+              - apply
+              - "{{ .kapp.vars.tf_plan_path }}"
             merge_priority: 10         # apply terraform *before* installing a helm chart
           - call: output      # call the whole 'output' unit
             merge_priority: 15         # apply terraform *before* installing a helm chart
@@ -139,25 +147,45 @@ programs:
           - call: plan-install/tf-init       # call the tf-init step defined under `plan_install`
             merge_priority: 25  # this needs to be merged after helm has run
           - name: tf-destroy
-            command: "{{ .kapp.vars.terraform }} destroy -auto-approve {{ .kapp.vars.tf_params }}"
+            command: "{{ .kapp.vars.terraform }}"
+            args:
+              - destroy
+              - -auto-approve
+              - "{{ .kapp.vars.tf_params }}"
             merge_priority: 30         # delete terraform *after* deleting a helm chart
         output:
           - call: plan-install/tf-init       # call the tf-init step defined under `plan_install`
           - name: tf-refresh
-            command: "{{ .kapp.vars.terraform }} refresh {{ .kapp.vars.tf_params }}"
+            command: "{{ .kapp.vars.terraform }}"
+            args:
+              - refresh
+              - "{{ .kapp.vars.tf_params }}"
             conditions:
               # this is evaluated before any steps are executed so it'll be false even if the tf-init step has just
               # created this directory
               - "{{ exists \"d\" \"{{ .kapp.vars.terraform_dir }}/.terraform\" | not }}"
           - name: tf-output
-            command: "{{ .kapp.vars.terraform }} output -json > {{ .kapp.vars.tf_output_path }}"
-            then:
-              - load_outputs
+            command: "{{ .kapp.vars.terraform }}"
+            args:
+              - output
+              - -json
+            stdout: "{{ .kapp.vars.tf_output_path }}"       # save stdout to this path
+            load_outputs: true      # instructs sugarkube to load and parse any defined outputs making them available for subsequent run steps
 
 # globally defined run units will be used as defaults for each program
 run_units:
   clean:
-    - command: "rm {{ .kapp.cacheRoot }}/*.log"
-    - command: "rm {{ .kapp.cacheRoot }}/*.err"
-    - command: "find {{ .kapp.cacheRoot }} -name '_generated_*' -type f -delete"
-    - command: "find {{ .kapp.cacheRoot }} -name '_generated_*' -type d -exec rm -r {} ';'"
+    - command: find
+      args:
+        - "{{ .kapp.cacheRoot }}"
+        - -name
+        - '_generated_*'
+        - -type f
+        - -delete
+    - command: find
+      args:
+        - "{{ .kapp.cacheRoot }}"
+        - -name
+        - '_generated_*'
+        - -type d
+        - -exec rm -rf {} ';'
