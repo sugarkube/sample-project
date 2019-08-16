@@ -16,8 +16,9 @@ kapps:
   - id: tiller
     state: present
     sources:
-      - uri: git@github.com:sugarkube/kapps.git//incubator/tiller#master     # todo - change to e.g. tiller-0.1.0
-      - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
+      - uri: git@github.com:sugarkube/kapps.git//incubator/tiller#run-units     # todo - change to e.g. tiller-0.1.0
+# Multiple sources can be defined, e.g.
+#      - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
 
   # The default installer for manifests is stored in config so we don't need
   # to add it to every entry. But we could in future with e.g. `installer: my-installer`
@@ -34,13 +35,11 @@ kapps:
       # sources are downloaded by `acquirers`. Currently we only have a git
       # acquirer, and the acquirer to use is inferred from the uri. Other
       # settings are specific to the acquirer.
-      - uri: git@github.com:sugarkube/kapps.git//incubator/cert-manager#master  # todo change to e.g. cert-manager-0.1.0
-      - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
+      - uri: git@github.com:sugarkube/kapps.git//incubator/cert-manager#run-units  # todo change to e.g. cert-manager-0.1.0
 
   # The default installer for manifests is stored in config so we don't need
   # to add it to every entry. But we could in future with e.g. `installer: my-installer`
   - id: nginx-ingress      # this can be anything - it doesn't need to relate to the name of any source
     state: present
     sources:
-      - uri: git@github.com:sugarkube/kapps.git//incubator/nginx-ingress#master  #branch: nginx-ingress-0.1.0
-      - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
+      - uri: git@github.com:sugarkube/kapps.git//incubator/nginx-ingress#run-units  #branch: nginx-ingress-0.1.0
