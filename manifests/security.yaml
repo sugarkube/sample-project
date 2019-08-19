@@ -9,5 +9,4 @@ kapps:
   - id: keycloak
     state: present
     sources:
-      - uri: git@github.com:sugarkube/kapps.git//incubator/keycloak#master   # todo - change to e.g. keycloak-0.1.0
-      - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
+      - uri: git@github.com:sugarkube/kapps.git//incubator/keycloak#run-units   # todo - change to e.g. keycloak-0.1.0

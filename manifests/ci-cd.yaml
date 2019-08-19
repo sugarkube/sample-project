@@ -9,5 +9,4 @@ kapps:
   - id: jenkins
     state: present
     sources:
-      - uri: git@github.com:sugarkube/kapps.git//incubator/jenkins#master    #branch: jenkins-0.1.0
-      - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
+      - uri: git@github.com:sugarkube/kapps.git//incubator/jenkins#run-units    #branch: jenkins-0.1.0

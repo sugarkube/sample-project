@@ -7,8 +7,7 @@ kapps:
   - id: prometheus-operator
     state: present
     sources:
-      - uri: git@github.com:sugarkube/kapps.git//incubator/prometheus-operator#master    #branch: prometheus-operator-0.1.0
-      - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
+      - uri: git@github.com:sugarkube/kapps.git//incubator/prometheus-operator#run-units    #branch: prometheus-operator-0.1.0
 
 #  # install the standalone grafana chart instead of the subchart in the prometheus operator
 #  - id: grafana
