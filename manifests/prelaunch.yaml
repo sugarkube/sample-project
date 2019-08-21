@@ -12,23 +12,21 @@ options:
                         # the preceding one without needing to explicitly define each dependency.
 
 kapps:
-  - id: terraform-remote-state
+  - id: terraform-bucket
     state: present    # if 'absent' (default) the kapp won't be installed or will be deleted (todo)
     sources:
-      - uri: git@github.com:sugarkube/kapps.git//incubator/terraform-remote-state#master
-      - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
+      - uri: git@github.com:sugarkube/kapps.git//incubator/terraform-bucket#master
     templates:
     # this kapp will remove the `.tmp` extension after creating an S3 bucket
     # for remote terraform state and copying the state over to it. That way
-    # subsequent runs will us the remote state directly.
-  #      - source: terraform/backend.tf
-  #        dest: terraform-remote-state/terraform_aws/_generated_backend.tf.tmp
+    # subsequent runs will use the remote state directly.
+    - source: terraform/backend.tf
+      dest: terraform_aws/_generated_backend.tf.tmp
 
   - id: hosted-zone
     state: present
     sources:
       - uri: git@github.com:sugarkube/kapps.git//incubator/hosted-zone#master
-      - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
     templates:
       - source: terraform/backend.tf
         # you can use variables in source/dest paths, e.g.
