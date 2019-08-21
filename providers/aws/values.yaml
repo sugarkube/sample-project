@@ -11,7 +11,9 @@ kube_context: "{{ .cluster_name }}"
 root_hosted_zone: k8s.sugarkube.io
 cluster_name: "{{ .stack.cluster }}.{{ .stack.region }}.{{ .root_hosted_zone }}"
 
+state_bucket: "state.{{ .cluster_name }}"     # a single state bucket for kops & terraform remote state
+
 terraform:
   state:
-    bucket: "terraform.{{ .cluster_name }}"
-    path: "{{ .stack.region }}"
+    bucket: "{{ .state_bucket }}"
+    path: "terraform/{{ .stack.region }}"       # terraform state will be stored in its own subdirectory

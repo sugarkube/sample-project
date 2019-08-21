@@ -1,7 +1,7 @@
 # Defaults for all kops clusters. Values here are suitable for prod because it's
 # safer to do that than to forget to update the prod config with bigger
 # instances, number of masters/nodes, etc.
-kops_state_bucket: "kops.{{ .cluster_name }}"
+kops_state_bucket: "{{ .state_bucket }}"
 
 provisioner:
   params:       # parameters to different kops commands
@@ -16,7 +16,7 @@ provisioner:
       dns: private                      # will be converted to hyphens and prepended
       authorization: RBAC               # with '--' to turn them into CLI args
       networking: calico
-      encrypt_etcd_storage:
+      encrypt_etcd_storage:      # boolean flag
       topology: private
       master_count: 3         # settings for production-quality clusters. Dev clusters override this
       master_size: t3.medium
@@ -53,8 +53,8 @@ provisioner:
     instanceGroups:
       nodes:                    # name of the instance group
         nodeLabels:
-          kops.k8s.io/test: test-label
+          sugarkube: true
         cloudLabels:
-          project: test-project-label
+          project: sugarkube-demo
         maxSize: 1          # change these then run `sugarkube cluster update -n aws-dev -s examples/stacks.yaml`
         minSize: 1          # and watch the config changes take effect
