@@ -10,3 +10,8 @@ kube_context: "{{ .cluster_name }}"
 
 root_hosted_zone: k8s.sugarkube.io
 cluster_name: "{{ .stack.cluster }}.{{ .stack.region }}.{{ .root_hosted_zone }}"
+
+terraform:
+  state:
+    bucket: "terraform.{{ .cluster_name }}"
+    path: "{{ .stack.region }}"
