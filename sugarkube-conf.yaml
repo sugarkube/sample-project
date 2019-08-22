@@ -126,6 +126,7 @@ programs:
             command: "{{ .kapp.vars.terraform }}"
             args: validate {{ .kapp.vars.tf_params }}      # entirely blank/empty args will be stripped out by sugarkube
           - name: tf-plan
+            print: verbose                     # print the plan to the console
             command: "{{ .kapp.vars.terraform }}"
             args: |
               plan
@@ -135,17 +136,26 @@ programs:
                 {{ .kapp.vars.tf_params }}
         apply_install:
           - name: tf-apply
+            print: verbose
             command: "{{ .kapp.vars.terraform }}"
             args: apply {{ .kapp.vars.tf_plan_path }}
             merge_priority: 10         # apply terraform *before* installing a helm chart
           - call: output      # call the whole 'output' unit
             merge_priority: 15         # apply terraform *before* installing a helm chart
+        plan_delete:
+          - call: plan-install/tf-init       # call the tf-init step defined under `plan_install`
+            merge_priority: 25  # this needs to be merged after helm has run
+          - name: tf-destroy
+            print: true
+            expected_exit_code: 1                           # terraform will exit with a code of '1', so only throw an error if it returns another error code
+            command: "{{ .kapp.vars.terraform }}"           # command not auto-approved
+            args: destroy {{ .kapp.vars.tf_params }}
         apply_delete:
           - call: plan-install/tf-init       # call the tf-init step defined under `plan_install`
             merge_priority: 25  # this needs to be merged after helm has run
           - name: tf-destroy
             command: "{{ .kapp.vars.terraform }}"
-            args: destroy -auto-approve {{ .kapp.vars.tf_params }}
+            args: destroy -auto-approve {{ .kapp.vars.tf_params }}      # command auto-approved
             merge_priority: 30         # delete terraform *after* deleting a helm chart
         output:         # todo - we'll probably need the ability to add conditions to entire run units, e.g. gt 0 len(.kapp.output)
           - call: plan-install/tf-init       # call the tf-init step defined under `plan_install`
