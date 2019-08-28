@@ -17,11 +17,11 @@ kapps:
     sources:
       - uri: git@github.com:sugarkube/kapps.git//incubator/terraform-bucket#master
     templates:
-    # this kapp will remove the `.tmp` extension after creating an S3 bucket
+    # this kapp will add a '.tf' extension after creating an S3 bucket
     # for remote terraform state and copying the state over to it. That way
     # subsequent runs will use the remote state directly.
     - source: terraform/backend.tf
-      dest: terraform_aws/_generated_backend.tf.tmp
+      dest: terraform_aws/_generated_backend
 
   - id: hosted-zone
     state: present
