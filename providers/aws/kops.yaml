@@ -53,7 +53,7 @@ provisioner:
     instanceGroups:
       nodes:                    # name of the instance group
         nodeLabels:
-          sugarkube: true
+          sugarkube: "true"
         cloudLabels:
           project: sugarkube-demo
         maxSize: 1          # change these then run `sugarkube cluster update -n aws-dev -s examples/stacks.yaml`
