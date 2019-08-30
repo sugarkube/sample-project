@@ -3,6 +3,65 @@ provisioner:
     create_cluster:
       # smaller instances, fewer masters and nodes
       master_count: 1
-      master_size: t3.small
       node_count: 2
-      node_size: t3.small
+      node_size: t3a.small
+
+  specs:
+    cluster:
+      additionalPolicies:
+        master: |
+          [
+            {
+              "Sid": "kopsK8sKMSEncrypted",
+              "Effect": "Allow",
+              "Action": [
+                "kms:CreateGrant",
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:GenerateDataKey*",
+                "kms:ReEncrypt*"
+              ],
+              "Resource": [
+                "{{ if .outputs.prelaunch__terraform_bucket.terraform }}{{ .outputs.prelaunch__terraform_bucket.terraform.bucket_encryption_key.value }}{{ end }}"
+              ]
+            },
+            {
+              "Sid": "kopsS3GetEncryptionConfiguration",
+              "Effect": "Allow",
+              "Action": [
+                "s3:GetEncryptionConfiguration"
+              ],
+              "Resource": [
+                "arn:aws:s3:::{{ .kops_state_bucket }}"
+              ]
+            }
+          ]
+        node: |
+          [
+            {
+              "Sid": "kopsK8sKMSEncrypted",
+              "Effect": "Allow",
+              "Action": [
+                "kms:CreateGrant",
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:GenerateDataKey*",
+                "kms:ReEncrypt*"
+              ],
+              "Resource": [
+                "{{ if .outputs.prelaunch__terraform_bucket.terraform }}{{ .outputs.prelaunch__terraform_bucket.terraform.bucket_encryption_key.value }}{{ end }}"
+              ]
+            },
+            {
+              "Sid": "kopsS3GetEncryptionConfiguration",
+              "Effect": "Allow",
+              "Action": [
+                "s3:GetEncryptionConfiguration"
+              ],
+              "Resource": [
+                "arn:aws:s3:::{{ .kops_state_bucket }}"
+              ]
+            }
+          ]

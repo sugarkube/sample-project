@@ -2,4 +2,4 @@ provisioner:
   params:
     create_cluster:
       # from https://stable.release.core-os.net/amd64-usr/current/coreos_production_ami_hvm_eu-west-2.txt
-      image: ami-056a316ba69c9d9e8
+      image: ami-0f5a5105bc30d5172

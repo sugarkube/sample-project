@@ -4,6 +4,9 @@
 kops_state_bucket: "{{ .state_bucket }}"
 
 provisioner:
+  bastion_user: core    # user name for setting up an SSH connection to the bastion
+  ssh_private_key: ~/.ssh/sugarkube-example     # see the tutorial for generating this
+
   params:       # parameters to different kops commands
     global:     # these are applied to all commands
       name: "{{ .cluster_name }}"
@@ -12,6 +15,7 @@ provisioner:
     create_cluster:       # Parameters for the `kops create cluster` command
       cloud: aws
       bastion: true
+      ssh_public_key: ~/.ssh/sugarkube-example.pub     # see the tutorial for generating this
       api_loadbalancer_type: internal   # More kops settings. Underscores in keys
       dns: private                      # will be converted to hyphens and prepended
       authorization: RBAC               # with '--' to turn them into CLI args
@@ -19,9 +23,9 @@ provisioner:
       encrypt_etcd_storage:      # boolean flag
       topology: private
       master_count: 3         # settings for production-quality clusters. Dev clusters override this
-      master_size: t3.medium
+      master_size: t3a.medium
       node_count: 2
-      node_size: t3.medium
+      node_size: t3a.medium
       master-zones: |-      # automatically set the zones based on the number of masters
         {{- if eq .provisioner.params.create_cluster.master_count 1 }}
           {{ .stack.region }}a
