@@ -1,3 +1,5 @@
+# Per-project config file. Copy this to the root of each of your projects.
+
 log_level: none
 #json_logs: false
 #no_color: true
@@ -97,14 +99,21 @@ programs:
       run_terraform: true    # none of these units will be run for a kapp if this is false because of the associated condition
       terraform: terraform   # path to the terraform binary to run. This allows version pinning if you have multiple versions of terraform on your machine.
       terraform_dir: "{{ .kapp.cacheRoot }}/{{ .kapp.vars.main_kapp_dir }}/terraform_{{ .stack.provider }}"
-      tf_output_path: _generated_terraform_output.json
-      tf_plan_path: _generated_plan.tfplan
+      tf_output_path: "{{ .kapp.cacheRoot }}/{{ .kapp.vars.main_kapp_dir }}/terraform_{{ .stack.provider }}/_generated_terraform_output.json"
+      tf_plan_path: "{{ .kapp.cacheRoot }}/{{ .kapp.vars.main_kapp_dir }}/terraform_{{ .stack.provider }}/_generated_plan.tfplan"
       # Dynamically searches for terraform tfvars files based on the current stack provider and various properties of the
       # stack (e.g. name, region, etc.) as well as any generated files. All files found are prepended by `-var-file`
       tf_params: >-
         {{ mapPrintF "terraform_%s/.*defaults\\.tfvars$" (listString .stack.provider) | findFiles .kapp.cacheRoot | mapPrintF "-var-file %s" | uniq | join " " | trim }}
         {{ mapPrintF (mapPrintF "terraform_%s/.*%%s\\.tfvars$" (listString .stack.provider) | join "") (.sugarkube.defaultVars | removeEmpty) | findFiles .kapp.cacheRoot | mapPrintF "-var-file %s" | uniq | join " " | trim }}
         {{ mapPrintF "terraform_%s/.*_generated_.*\\.tfvars$" (listString .stack.provider) | findFiles .kapp.cacheRoot | mapPrintF "-var-file %s" | uniq | join " " | trim }}
+
+    templates:
+      backend:
+        source: terraform/backend.tf
+        dest: terraform_{{ .stack.provider }}/_generated_backend.tf
+        conditions:
+          - "{{ exists \"d\" .kapp.vars.terraform_dir }}"   # only render this template if a terraform directory exists
 
     run_units:
       terraform:
@@ -143,7 +152,7 @@ programs:
           - call: output      # call the whole 'output' unit
             merge_priority: 15         # apply terraform *before* installing a helm chart
         plan_delete:
-          - call: plan-install/tf-init       # call the tf-init step defined under `plan_install`
+          - call: plan_install/tf-init       # call the tf-init step defined under `plan_install`
             merge_priority: 25  # this needs to be merged after helm has run
           - name: tf-destroy
             print: true
@@ -151,14 +160,14 @@ programs:
             command: "{{ .kapp.vars.terraform }}"           # command not auto-approved
             args: destroy {{ .kapp.vars.tf_params }}
         apply_delete:
-          - call: plan-install/tf-init       # call the tf-init step defined under `plan_install`
+          - call: plan_install/tf-init       # call the tf-init step defined under `plan_install`
             merge_priority: 25  # this needs to be merged after helm has run
           - name: tf-destroy
             command: "{{ .kapp.vars.terraform }}"
             args: destroy -auto-approve {{ .kapp.vars.tf_params }}      # command auto-approved
             merge_priority: 30         # delete terraform *after* deleting a helm chart
         output:         # todo - we'll probably need the ability to add conditions to entire run units, e.g. gt 0 len(.kapp.output)
-          - call: plan-install/tf-init       # call the tf-init step defined under `plan_install`
+          - call: plan_install/tf-init       # call the tf-init step defined under `plan_install`
           - name: tf-refresh
             command: "{{ .kapp.vars.terraform }}"
             args: refresh {{ .kapp.vars.tf_params }}
