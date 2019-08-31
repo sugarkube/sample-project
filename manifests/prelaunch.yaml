@@ -20,8 +20,9 @@ kapps:
     # this kapp will add a '.tf' extension after creating an S3 bucket
     # for remote terraform state and copying the state over to it. That way
     # subsequent runs will use the remote state directly.
-    - source: terraform/backend.tf
-      dest: terraform_aws/_generated_backend
+      backend:
+        source: terraform/backend.tf
+        dest: terraform_aws/_generated_backend
 
   # creates a private hosted zone and a temporary placeholder VPC before kicking
   # off the cluster update
