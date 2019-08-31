@@ -1,6 +1,6 @@
 defaults:
   depends_on:   # all kapps in this manifest depend on these other kapps
-    - bootstrap:cert-manager
+    - id: bootstrap:cert-manager
 
 # This manifest is for core services that are only required when running on AWS.
 kapps:

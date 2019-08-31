@@ -1,8 +1,8 @@
 defaults:
   depends_on:   # all kapps in this manifest depend on these other kapps
-    - bootstrap:cert-manager
-    - bootstrap:nginx-ingress
-    - monitoring:prometheus-operator    # this will be ignored if the monitoring:prometheus-operator manifest is
+    - id: bootstrap:cert-manager
+    - id: bootstrap:nginx-ingress
+    - id: monitoring:prometheus-operator    # this will be ignored if the monitoring:prometheus-operator manifest is
                                         # excluded (i.e. with '-x monitoring:*' or '-x monitoring:prometheus-operator').
 
 kapps:
