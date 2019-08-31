@@ -5,7 +5,6 @@ terraform {
     key    = "{{ .terraform.state.path }}/{{ .kapp.id }}/terraform.tfstate"
     region = "{{ .stack.region }}"
     encrypt = true
-//    kms_key_id = "{{ .outputs.prelaunch__terraform_bucket.terraform.bucket_encryption_key }}"
   }
 {{- else }}
   backend "local" {
