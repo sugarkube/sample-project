@@ -1,0 +1,34 @@
+
+# eksctl names the context <user>@<cluster>, but sugarkube will strip off the <user> part to make these configs
+# more useful when shared between multiple users
+kube_context: "{{ .cluster_name }}.{{ .stack.region }}.eksctl.io"
+
+provisioner:
+  binary: eksctl
+  params:
+    get_cluster:     # flags for the `get cluster` command
+      name: "{{ .cluster_name }}"           # this key is required
+    utils:
+      write_kubeconfig:
+        name: "{{ .cluster_name }}"
+        region: "{{ .stack.region }}"
+
+    # everything under this key is written to a YAML file and passed to eksctl. See https://eksctl.io/usage/schema/
+    # for the available keys
+    config_file:
+      apiVersion: eksctl.io/v1alpha5
+      kind: ClusterConfig
+
+      metadata:
+        name: "{{ .cluster_name }}"
+        region: "{{ .stack.region }}"
+      nodeGroups:
+        - name: nodegroup-1
+          instanceType: t3a.small
+          desiredCapacity: 1
+          labels:
+            role: workers
+            sugarkube: "true"
+          ssh:
+            publicKeyName: sugarkube-example
+            publicKeyPath: ~/.ssh/sugarkube-example.pub

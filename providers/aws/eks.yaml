@@ -1,0 +1,4 @@
+# Defaults for all EKS clusters.
+
+# EKS cluster names must satisfy the regex '[a-zA-Z][-a-zA-Z0-9]*' so we don't fully qualify them like for kops clusters
+cluster_name: "{{ .stack.cluster }}"

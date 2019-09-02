@@ -3,6 +3,9 @@
 # instances, number of masters/nodes, etc.
 kops_state_bucket: "{{ .state_bucket }}"
 
+kube_context: "{{ .cluster_name }}"
+cluster_name: "{{ .stack.cluster }}.{{ .stack.region }}.{{ .root_hosted_zone }}"
+
 provisioner:
   bastion_user: core    # user name for setting up an SSH connection to the bastion
   ssh_private_key: ~/.ssh/sugarkube-example     # see the tutorial for generating this

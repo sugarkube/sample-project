@@ -1,7 +1,6 @@
 # Defaults for all clusters. Values here are suitable for prod because it's
 # safer to do that than to forget to update the prod config with bigger
 # instances, number of masters/nodes, etc.
-kube_context: "{{ .cluster_name }}"
 
 # Lists IDs of trusted GPG keys. Clusters with `require_signed_tags=true` will
 # reject any git tags that haven't been signed by one of the keys listed here.
@@ -9,7 +8,6 @@ kube_context: "{{ .cluster_name }}"
 #- 123412341234       # todo - support this (currently not implemented)
 
 root_hosted_zone: k8s.sugarkube.io
-cluster_name: "{{ .stack.cluster }}.{{ .stack.region }}.{{ .root_hosted_zone }}"
 
 state_bucket: "state.{{ .cluster_name }}"     # a single state bucket for kops & terraform remote state
 

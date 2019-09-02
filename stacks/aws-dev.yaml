@@ -36,3 +36,10 @@ aws-dev1:
       # To control rolling out a new kapp for the first time either set the state to absent in the
       # manifest file and then opt into it in each stack, or do the opposite, set state: present
       # and opt out of it in specific stacks.
+
+eks-dev1:
+  <<: *defaults
+  cluster: eksdev1
+  provisioner: eks
+  manifests:
+    - uri: ../manifests/bootstrap.yaml

@@ -17,10 +17,10 @@ kapps:
     state: present
     depends_on:
       # tiller only depends on the `prelaunch:private-hosted-zone-clean-up` kapp when running on a stack using
-      # the 'aws' provider
+      # the 'kops' provisioner
       - id: prelaunch:private-hosted-zone-clean-up
         conditions:
-          - "{{ eq .stack.provider \"aws\" }}"
+          - "{{ eq .stack.provisioner \"kops\" }}"
     sources:
       - uri: git@github.com:sugarkube/kapps.git//incubator/tiller#master     # todo - change to e.g. tiller-0.1.0
   # Multiple sources can be defined, e.g.
