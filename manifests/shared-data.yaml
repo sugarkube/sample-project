@@ -1,0 +1,9 @@
+# This manifest contains shared data layer resources, e.g. databases. It could also be used for hosted
+# memcached clusters, etc. While these services are external to any Kubernetes clusters they'll still depend
+# on actual clusters if they need to permit access from a cluster's VPCs (like for Aurora DBs).
+
+kapps:
+  - id: aurora
+    state: present
+    sources:
+      - uri: git@github.com:sugarkube/kapps.git//incubator/auroradb#master     # todo - change to e.g. auroradb-0.1.0
