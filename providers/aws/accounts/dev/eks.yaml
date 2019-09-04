@@ -3,6 +3,8 @@
 # more useful when shared between multiple users
 kube_context: "{{ .cluster_name }}.{{ .stack.region }}.eksctl.io"
 
+node_group_name: nodegroup-1      # we declare this here so we can pass it to kapps
+
 provisioner:
   binary: eksctl
   params:
@@ -23,8 +25,8 @@ provisioner:
         name: "{{ .cluster_name }}"
         region: "{{ .stack.region }}"
       nodeGroups:
-        - name: nodegroup-1
-          instanceType: t3a.small
+        - name: "{{ .node_group_name }}"
+          instanceType: t3a.medium
           desiredCapacity: 1
           labels:
             role: workers
