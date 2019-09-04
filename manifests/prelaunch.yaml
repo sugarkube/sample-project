@@ -27,7 +27,7 @@ kapps:
   # creates a private hosted zone and a temporary placeholder VPC before kicking
   # off the cluster update
   - id: private-hosted-zone
-    state: present
+    state: "{{ if eq .stack.provisioner \"kops\" }}present{{ else }}absent{{ end }}"
     sources:
       - uri: git@github.com:sugarkube/kapps.git//incubator/hosted-zone#master
     post_install_actions:
@@ -36,7 +36,7 @@ kapps:
   # run the same kapp again. It will detect the VPC created by Kops and associate
   # it with the private hosted zone, then delete the temporary placeholder VPC.
   - id: private-hosted-zone-clean-up
-    state: present
+    state: "{{ if eq .stack.provisioner \"kops\" }}present{{ else }}absent{{ end }}"
     sources:
       - uri: git@github.com:sugarkube/kapps.git//incubator/hosted-zone#master
     pre_delete_actions:

@@ -42,6 +42,7 @@ eks-dev1:
   cluster: eksdev1
   provisioner: eks
   manifests:
+    - uri: ../manifests/prelaunch.yaml
     - uri: ../manifests/bootstrap.yaml
     - uri: ../manifests/shared-data.yaml      # we'll create a single shared database for the wordpress sites
     - uri: ../manifests/wordpress-sites.yaml
