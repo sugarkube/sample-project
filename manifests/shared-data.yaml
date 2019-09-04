@@ -1,9 +1,21 @@
 # This manifest contains shared data layer resources, e.g. databases. It could also be used for hosted
-# memcached clusters, etc. While these services are external to any Kubernetes clusters they'll still depend
+# memcached clusters, etc. While these services are external to any Kubernetes clusters they still depend
 # on actual clusters if they need to permit access from a cluster's VPCs (like for Aurora DBs).
+defaults:
+  depends_on:   # all kapps in this manifest depend on these other kapps
+    - id: bootstrap:tiller        # these kapps rely on a cluster being present - tiller is a proxy for that
 
 kapps:
-  - id: aurora
+  - id: site1-db
     state: present
     sources:
       - uri: git@github.com:sugarkube/kapps.git//incubator/auroradb#master     # todo - change to e.g. auroradb-0.1.0
+    vars:
+      database_name: site1
+
+  - id: site2-db
+    state: present
+    sources:
+      - uri: git@github.com:sugarkube/kapps.git//incubator/auroradb#master     # todo - change to e.g. auroradb-0.1.0
+    vars:
+      database_name: site2

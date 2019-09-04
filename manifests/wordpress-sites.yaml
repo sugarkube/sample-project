@@ -1,8 +1,3 @@
-defaults:
-  depends_on:   # all kapps in this manifest depend on these other kapps
-    - id: bootstrap:cert-manager
-    - id: bootstrap:nginx-ingress
-
 # This manifest contains kapps that represent the actual products you're shipping,
 # in this case web sites.
 
@@ -32,6 +27,11 @@ kapps:
 #      path: examples/values/wordpress/site1/
       - id: data
         uri: git@github.com:sugarkube/sample-project.git//demo-data/wordpress/site1#master
+    depends_on:
+      - id: bootstrap:cert-manager
+      - id: shared-date:site1-db
+        conditions:
+          - "{{ eq .stack.provider \"aws\" }}"
     vars:
       namespace: wordpress-site1      # different namespace
       hostname: site1.localhost
@@ -48,3 +48,8 @@ kapps:
         uri: git@github.com:sugarkube/sample-project.git//demo-data/wordpress/site2#master
     vars:
       hostname: site2.localhost
+    depends_on:
+      - id: bootstrap:cert-manager
+      - id: shared-date:site2-db
+        conditions:
+          - "{{ eq .stack.provider \"aws\" }}"
