@@ -29,7 +29,7 @@ kapps:
         uri: git@github.com:sugarkube/sample-project.git//demo-data/wordpress/site1#master
     depends_on:
       - id: bootstrap:cert-manager
-      - id: shared-date:site1-db
+      - id: shared-data:site1-db
         conditions:
           - "{{ eq .stack.provider \"aws\" }}"
     vars:
@@ -50,6 +50,6 @@ kapps:
       hostname: site2.localhost
     depends_on:
       - id: bootstrap:cert-manager
-      - id: shared-date:site2-db
+      - id: shared-data:site2-db
         conditions:
           - "{{ eq .stack.provider \"aws\" }}"

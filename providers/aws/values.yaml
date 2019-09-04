@@ -9,8 +9,6 @@
 
 root_hosted_zone: k8s.sugarkube.io
 
-state_bucket: "state.{{ .cluster_name }}"     # a single state bucket for kops & terraform remote state
-
 terraform:
   state:
     bucket: "{{ .state_bucket }}"
