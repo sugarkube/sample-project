@@ -39,6 +39,7 @@ kapps:
       db_user: "{{ .outputs.shared_data__site1_db.terraform.master_user.value }}"
       db_password: "{{ .outputs.shared_data__site1_db.terraform.master_password.value }}"
       db_name: "{{ .outputs.shared_data__site1_db.terraform.database.value }}"
+      cluster_issuer: "{{ .outputs.bootstrap__cert_manager.clusterIssuer.metadata.name }}"
 
   - id: site2
     state: absent   # let's pretend this site is still in development and should only be installed
@@ -56,6 +57,7 @@ kapps:
       db_user: "{{ .outputs.shared_data__site2_db.terraform.master_user.value }}"
       db_password: "{{ .outputs.shared_data__site2_db.terraform.master_password.value }}"
       db_name: "{{ .outputs.shared_data__site2_db.terraform.database.value }}"
+      cluster_issuer: "{{ .outputs.bootstrap__cert_manager.clusterIssuer.metadata.name }}"
     depends_on:
       - id: bootstrap:cert-manager
       - id: shared-data:site2-db
