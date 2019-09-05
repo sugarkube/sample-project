@@ -52,3 +52,6 @@ kapps:
     state: present
     sources:
       - uri: git@github.com:sugarkube/kapps.git//incubator/nginx-ingress#master  #branch: nginx-ingress-0.1.0
+    vars:
+      cert_manager_kind: "{{ .outputs.cert_manager.clusterIssuer.kind }}"
+      cert_manager_name: "{{ .outputs.cert_manager.clusterIssuer.metadata.name }}"
