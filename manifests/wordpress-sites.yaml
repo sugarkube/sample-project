@@ -34,7 +34,7 @@ kapps:
           - "{{ eq .stack.provider \"aws\" }}"
     vars:
       namespace: wordpress-site1      # different namespace
-      hostname: site1.localhost
+      hostname: site1.{{ .cluster_hosted_zone }}
       db_host: "{{ .outputs.shared_data__site1_db.terraform.endpoint.value }}"
       db_user: "{{ .outputs.shared_data__site1_db.terraform.master_user.value }}"
       db_password: "{{ .outputs.shared_data__site1_db.terraform.master_password.value }}"
@@ -52,7 +52,7 @@ kapps:
       - id: data   # the ID can be explicitly defined
         uri: git@github.com:sugarkube/sample-project.git//demo-data/wordpress/site2#master
     vars:
-      hostname: site2.localhost
+      hostname: site2.{{ .cluster_hosted_zone }}
       db_host: "{{ .outputs.shared_data__site2_db.terraform.endpoint.value }}"
       db_user: "{{ .outputs.shared_data__site2_db.terraform.master_user.value }}"
       db_password: "{{ .outputs.shared_data__site2_db.terraform.master_password.value }}"
