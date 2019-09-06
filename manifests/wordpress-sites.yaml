@@ -27,7 +27,7 @@ kapps:
       - id: data
         uri: git@github.com:sugarkube/sample-project.git//demo-data/wordpress/site1#master
     depends_on:
-      - id: bootstrap:cert-manager
+      - id: bootstrap:nginx-ingress
       - id: core-aws:external-dns
       - id: shared-data:site1-db
         conditions:
@@ -57,7 +57,7 @@ kapps:
       db_name: "{{ .outputs.shared_data__site2_db.terraform.database.value }}"
       cluster_issuer: "{{ .outputs.bootstrap__cert_manager.clusterIssuer.metadata.name }}"
     depends_on:
-      - id: bootstrap:cert-manager
+      - id: bootstrap:nginx-ingress
       - id: core-aws:external-dns
       - id: shared-data:site2-db
         conditions:
