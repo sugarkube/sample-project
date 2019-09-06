@@ -11,6 +11,20 @@ defaults: &defaults
   template_dirs:
     - ../templates/    # paths to template files that can be used by kapps
 
+# this is used to create shared resources, e.g. a generic dev public hosted zone and an ACM certificate. This is a
+# one-time/infrequent task and creating ACM certs can be slow, so it's spun out into its own config (a stack without
+# a cluster).
+account-setup:
+  <<: *defaults
+  cluster: dev          # rename the cluster since this is used in the state bucket name and hosted zone name
+  provisioner: none
+  manifests:
+    - uri: ../manifests/prelaunch.yaml
+      overrides:
+        public-hosted-zone:
+          conditions:
+            - true          # force this kapp to run for this stack (by default it's false so won't be run)
+
 aws-dev1:
   <<: *defaults
   cluster: dev1
@@ -26,7 +40,6 @@ aws-dev1:
       # (e.g. dev/staging/prod) just tweaking a few values instead of maintaining multiplle different copies of manifests.
       overrides:
         wordpress-site2:
-          state: present
           sources:
             wordpress:
               options:

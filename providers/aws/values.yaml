@@ -8,6 +8,9 @@
 #- 123412341234       # todo - support this (currently not implemented)
 
 root_hosted_zone: k8s.sugarkube.io
+cluster_name: "{{ .stack.cluster }}.{{ .root_hosted_zone }}"
+state_bucket: "state.{{ .stack.cluster }}.{{ .root_hosted_zone }}"     # a single state bucket for kops & terraform remote state
+cluster_hosted_zone: "{{ .stack.cluster }}.{{ .root_hosted_zone }}"
 
 terraform:
   state:
