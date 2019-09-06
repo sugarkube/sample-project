@@ -29,7 +29,7 @@ kapps:
   - id: private-hosted-zone
     state: "{{ if eq .stack.provisioner \"kops\" }}present{{ else }}absent{{ end }}"
     sources:
-      - uri: git@github.com:sugarkube/kapps.git//incubator/hosted-zone#master
+      - uri: git@github.com:sugarkube/kapps.git//incubator/private-hosted-zone#master
     post_install_actions:
       - cluster_update:     # makes Sugarkube actually create the cluster
 
@@ -38,6 +38,6 @@ kapps:
   - id: private-hosted-zone-clean-up
     state: "{{ if eq .stack.provisioner \"kops\" }}present{{ else }}absent{{ end }}"
     sources:
-      - uri: git@github.com:sugarkube/kapps.git//incubator/hosted-zone#master
+      - uri: git@github.com:sugarkube/kapps.git//incubator/private-hosted-zone#master
     pre_delete_actions:
       - cluster_delete:         # before deleting this kapp delete the target cluster
