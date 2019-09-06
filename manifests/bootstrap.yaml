@@ -14,7 +14,6 @@ options:
 
 kapps:
   - id: tiller
-    state: present
     depends_on:
       # tiller only depends on the `prelaunch:private-hosted-zone-clean-up` kapp when running on a stack using
       # the 'kops' provisioner
@@ -35,7 +34,6 @@ kapps:
   # The simplest manifest entry uses defaults for e.g. the helm namespace,
   # chart name, etc. when using `helm` as the installer.
   - id: cert-manager       # Manifest-unique identifier.
-    state: present
     # Sources to checkout as siblings in the cache for this kapp. This allows
     # creating a cache entry from e.g. the actual kapp source, a directory of
     # shared makefiles, and/or pulling in `values.yaml` files etc. from a
@@ -49,7 +47,6 @@ kapps:
   # The default installer for manifests is stored in config so we don't need
   # to add it to every entry. But we could in future with e.g. `installer: my-installer`
   - id: nginx-ingress      # this can be anything - it doesn't need to relate to the name of any source
-    state: present
     sources:
       - uri: git@github.com:sugarkube/kapps.git//incubator/nginx-ingress#master  #branch: nginx-ingress-0.1.0
     vars:

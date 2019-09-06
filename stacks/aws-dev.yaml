@@ -44,6 +44,7 @@ eks-dev1:
   manifests:
     - uri: ../manifests/prelaunch.yaml
     - uri: ../manifests/bootstrap.yaml
+    - uri: ../manifests/core-aws.yaml
     - uri: ../manifests/shared-data.yaml      # we'll create a single shared database for the wordpress sites
     - uri: ../manifests/wordpress-sites.yaml
       id: wordpress

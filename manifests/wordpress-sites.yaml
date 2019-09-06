@@ -9,7 +9,6 @@ kapps:
   # Unique identifier. The same kapp can be installed multiple times provided
   # this is unique per instance. This will be the release name when using Helm.
   - id: site1
-    state: present
     # Sources to checkout as siblings in the cache for this kapp. This allows
     # creating a cache entry from e.g. the actual kapp source, a directory of
     # shared makefiles, and/or pulling in `values.yaml` files etc. from a
@@ -29,6 +28,7 @@ kapps:
         uri: git@github.com:sugarkube/sample-project.git//demo-data/wordpress/site1#master
     depends_on:
       - id: bootstrap:cert-manager
+      - id: core-aws:external-dns
       - id: shared-data:site1-db
         conditions:
           - "{{ eq .stack.provider \"aws\" }}"
@@ -42,8 +42,6 @@ kapps:
       cluster_issuer: "{{ .outputs.bootstrap__cert_manager.clusterIssuer.metadata.name }}"
 
   - id: site2
-    state: absent   # let's pretend this site is still in development and should only be installed
-    # in stacks that explicitly override the state to 'present' (e.g. dev stacks)
     sources:
       # the implicit ID of this source is 'wordpress' because that's the last component of the path.
       # Source IDs are used for namespacing in caches, and can also be used to override settings
@@ -60,6 +58,7 @@ kapps:
       cluster_issuer: "{{ .outputs.bootstrap__cert_manager.clusterIssuer.metadata.name }}"
     depends_on:
       - id: bootstrap:cert-manager
+      - id: core-aws:external-dns
       - id: shared-data:site2-db
         conditions:
           - "{{ eq .stack.provider \"aws\" }}"

@@ -9,6 +9,13 @@ kapps:
   # extracted from `Charts.yaml` in `charts/stable/kiam/`. No `installer` block
   # is defined so defaults are used.
   - id: kiam
-    state: present
+    conditions:
+    - "{{ eq .stack.provisioner \"kops\" }}"
     sources:
       - uri: git@github.com:sugarkube/kapps.git//incubator/kiam/#master      #      branch: kiam-0.1.0
+
+  - id: external-dns
+    sources:
+      - uri: git@github.com:sugarkube/kapps.git//incubator/external-dns/#master      #      branch: external-dns-0.1.0
+    conditions:
+      - "{{ eq .stack.provider \"aws\" }}"
