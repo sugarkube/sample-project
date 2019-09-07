@@ -33,7 +33,10 @@ kapps:
           - "{{ eq .stack.provider \"aws\" }}"
     vars:
       namespace: wordpress-site1      # different namespace
-      hostname: site1.{{ .cluster_hosted_zone }}
+      hostname: "{{ .kapp.id }}.{{ .cluster_hosted_zone }}"
+      hosted_zone: "{{ .cluster_hosted_zone }}"
+      cname_hostname: "{{ if eq .stack.provider \"aws\" }}{{ .outputs.bootstrap__nginx_ext1.lb_hostname }}{{ end }}"
+      ingress_class: "nginx-ext1"       # todo - pull this from a reference to the kapp itself
       db_host: "{{ .outputs.shared_data__site1_db.terraform.endpoint.value }}"
       db_user: "{{ .outputs.shared_data__site1_db.terraform.master_user.value }}"
       db_password: "{{ .outputs.shared_data__site1_db.terraform.master_password.value }}"
@@ -49,7 +52,10 @@ kapps:
       - id: data   # the ID can be explicitly defined
         uri: git@github.com:sugarkube/sample-project.git//demo-data/wordpress/site2#master
     vars:
-      hostname: site2.{{ .cluster_hosted_zone }}
+      hostname: "{{ .kapp.id }}.{{ .cluster_hosted_zone }}"
+      hosted_zone: "{{ .cluster_hosted_zone }}"
+      cname_hostname: "{{ if eq .stack.provider \"aws\" }}{{ .outputs.bootstrap__nginx_ext1.lb_hostname }}{{ end }}"
+      ingress_class: "nginx-ext1"       # todo - pull this from a reference to the kapp itself
       db_host: "{{ .outputs.shared_data__site2_db.terraform.endpoint.value }}"
       db_user: "{{ .outputs.shared_data__site2_db.terraform.master_user.value }}"
       db_password: "{{ .outputs.shared_data__site2_db.terraform.master_password.value }}"
