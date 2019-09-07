@@ -45,8 +45,7 @@ kapps:
 
   - id: public-hosted-zone
     conditions:
-    - false     # because this is set to false, by default this kapp will never be run. In stacks we want to use it
-                # we override the conditions to set it to true
+    - "{{ eq .stack.provider \"aws\" }}"      # only run on AWS
     sources:
       - uri: git@github.com:sugarkube/kapps.git//incubator/public-hosted-zone#master
     vars:
