@@ -1,6 +1,5 @@
 defaults: &defaults
   provider: aws
-  provisioner: kops
   account: dev
   profile: dev
   region: eu-west-2
@@ -16,18 +15,21 @@ defaults: &defaults
 # a cluster).
 account-setup:
   <<: *defaults
-  cluster: dev          # rename the cluster since this is used in the state bucket name and hosted zone name
+  cluster: setup        # this is used in a bucket name for terraform state
   provisioner: none
   manifests:
     - uri: ../manifests/prelaunch.yaml
       overrides:
         public-hosted-zone:
-          conditions:
-            - true          # force this kapp to run for this stack (by default it's false so won't be run)
+          vars:
+            parent_hosted_zone: "{{ .domain }}"
+            hosted_zone: "{{ .root_hosted_zone }}"
+            create_acm_certs: true        # override a variable here to make the kapp create ACM certs for the domain
 
-aws-dev1:
+kopsdev1:
   <<: *defaults
   cluster: dev1
+  provisioner: kops
   manifests:
     # if no protocol is given, file:// is assumed.
     - uri: ../manifests/prelaunch.yaml
@@ -50,7 +52,7 @@ aws-dev1:
       # manifest file and then opt into it in each stack, or do the opposite, set state: present
       # and opt out of it in specific stacks.
 
-eks-dev1:
+eksdev1:
   <<: *defaults
   cluster: eksdev1
   provisioner: eks
