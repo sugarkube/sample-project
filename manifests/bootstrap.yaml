@@ -44,11 +44,21 @@ kapps:
       # settings are specific to the acquirer.
       - uri: git@github.com:sugarkube/kapps.git//incubator/cert-manager#master  # todo change to e.g. cert-manager-0.1.0
 
-  # The default installer for manifests is stored in config so we don't need
-  # to add it to every entry. But we could in future with e.g. `installer: my-installer`
-  - id: nginx-ingress      # this can be anything - it doesn't need to relate to the name of any source
+  # This will create a LoadBalancer ingress on AWS or a NodePort otherwise
+  - id: nginx-ext1      # this can be anything - it doesn't need to relate to the name of any source
     sources:
       - uri: git@github.com:sugarkube/kapps.git//incubator/nginx-ingress#master  #branch: nginx-ingress-0.1.0
     vars:
       cert_manager_kind: "{{ .outputs.cert_manager.clusterIssuer.kind }}"
       cert_manager_name: "{{ .outputs.cert_manager.clusterIssuer.metadata.name }}"
+      main_kapp_dir: nginx-ingress      # because the kapp ID is different to the main directory in the workspace we need
+                                        # to tell sugarkube which directory contains the kapp's sugarkube.yaml file
+
+  # If you wanted another ingress you could create it like this:
+#  - id: nginx-ext2       # this can be anything - it doesn't need to relate to the name of any source
+#    sources:
+#      - uri: git@github.com:sugarkube/kapps.git//incubator/nginx-ingress#master  #branch: nginx-ingress-0.1.0
+#    vars:
+#      cert_manager_kind: "{{ .outputs.cert_manager.clusterIssuer.kind }}"
+#      cert_manager_name: "{{ .outputs.cert_manager.clusterIssuer.metadata.name }}"
+#      main_kapp_dir: nginx-ingress
