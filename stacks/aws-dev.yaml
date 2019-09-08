@@ -20,7 +20,7 @@ account-setup:
   manifests:
     - uri: ../manifests/prelaunch.yaml
       overrides:
-        public-hosted-zone:
+        public-hosted-zone:     # ID of the kapp to override values for
           vars:
             parent_hosted_zone: "{{ .domain }}"
             hosted_zone: "{{ .root_hosted_zone }}"
@@ -35,6 +35,7 @@ kopsdev1:
     - uri: ../manifests/prelaunch.yaml
     - uri: ../manifests/bootstrap.yaml
     - uri: ../manifests/core-aws.yaml
+    - uri: ../manifests/shared-data.yaml      # we'll create a single shared database for the wordpress sites
     - uri: ../manifests/wordpress-sites.yaml
       id: wordpress
       # Data in manifests can be overridden in stack files like this to e.g. specify the branch of a source to be used
@@ -63,3 +64,15 @@ eksdev1:
     - uri: ../manifests/shared-data.yaml      # we'll create a single shared database for the wordpress sites
     - uri: ../manifests/wordpress-sites.yaml
       id: wordpress
+
+# this stack contains opsy stuff like keycloak for SSO, Jenkins and monitoring stuff
+eksops1:
+  <<: *defaults
+  cluster: eksops1
+  provisioner: eks
+  manifests:
+    - uri: ../manifests/prelaunch.yaml
+    - uri: ../manifests/bootstrap.yaml
+    - uri: ../manifests/security.yaml
+    - uri: ../manifests/monitoring.yaml
+    - uri: ../manifests/ci-cd.yaml

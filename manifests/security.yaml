@@ -1,7 +1,7 @@
 defaults:
   depends_on:   # all kapps in this manifest depend on these other kapps
     - id: bootstrap:cert-manager
-    - id: bootstrap:nginx-ingress
+    - id: bootstrap:nginx-ext1
 
 # A security layer. In this case it installs Keycloak which can be used as an OIDC provider
 # (but this kapp so far just installs it - it doesn't configure it as yet).

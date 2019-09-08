@@ -21,6 +21,8 @@ aws-prod:
     - uri: ../manifests/core-aws.yaml
     - uri: ../manifests/security.yaml
     - uri: ../manifests/ci-cd.yaml
+    - uri: ../manifests/monitoring.yaml
+    - uri: ../manifests/shared-data.yaml
     - uri: ../manifests/wordpress-sites.yaml
       id: wordpress
       # Data in manifests can be overridden in stack files like this to e.g. specify the branch of a source to be used
