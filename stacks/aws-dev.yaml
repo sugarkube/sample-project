@@ -66,9 +66,9 @@ eksdev1:
       id: wordpress
 
 # this stack contains opsy stuff like keycloak for SSO, Jenkins and monitoring stuff
-eksops1:
+devops1:
   <<: *defaults
-  cluster: eksops1
+  cluster: devops1
   provisioner: eks
   manifests:
     - uri: ../manifests/prelaunch.yaml
