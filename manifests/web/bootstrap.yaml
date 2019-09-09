@@ -20,7 +20,7 @@ kapps:
           - "{{ eq .stack.provider \"aws\" }}"
       - id: prelaunch:public-hosted-zone
         conditions:
-          - "{{ eq .stack.provisioner \"eks\" }}"
+          - "{{ eq .stack.provisioner \"eks\" }}"       # conditions can use any available variable
     sources:
       - uri: git@github.com:sugarkube/kapps.git//incubator/tiller#master     # todo - change to e.g. tiller-0.1.0
   # Multiple sources can be defined, e.g.
@@ -43,7 +43,7 @@ kapps:
       - uri: git@github.com:sugarkube/kapps.git//incubator/cert-manager#master  # todo change to e.g. cert-manager-0.1.0
 
   # This will create a LoadBalancer ingress on AWS or a NodePort otherwise
-  - id: nginx-ext1      # this can be anything - it doesn't need to relate to the name of any source
+  - id: nginx1      # this can be anything - it doesn't need to relate to the name of any source
     sources:
       - uri: git@github.com:sugarkube/kapps.git//incubator/nginx-ingress#master  #branch: nginx-ingress-0.1.0
     vars:
@@ -53,7 +53,7 @@ kapps:
                                         # to tell sugarkube which directory contains the kapp's sugarkube.yaml file
 
   # If you wanted another ingress you could create it like this:
-#  - id: nginx-ext2       # this can be anything - it doesn't need to relate to the name of any source
+#  - id: nginx2       # this can be anything - it doesn't need to relate to the name of any source
 #    sources:
 #      - uri: git@github.com:sugarkube/kapps.git//incubator/nginx-ingress#master  #branch: nginx-ingress-0.1.0
 #    vars:

@@ -22,3 +22,6 @@ defaults:
     - bootstrap:cert-manager
     - bootstrap:nginx-ingress
 ```
+
+Note: You could share common manifests between stacks, but of course the more something's shared the greater the risk of accidentally breaking things. So for simplicity it's better in this example to have different directories and a discrete set of manifests for each cluster type.
+ 

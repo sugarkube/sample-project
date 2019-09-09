@@ -27,7 +27,7 @@ kapps:
       - id: data
         uri: git@github.com:sugarkube/sample-project.git//demo-data/wordpress/site1#master
     depends_on:
-      - id: bootstrap:nginx-ext1
+      - id: bootstrap:nginx1
       - id: shared-data:site1-db
         conditions:
           - "{{ eq .stack.provider \"aws\" }}"
@@ -36,7 +36,7 @@ kapps:
       hostname: "{{ .kapp.id }}.{{ .cluster_hosted_zone }}"
       hosted_zone: "{{ .cluster_hosted_zone }}"
       cname_hostname: "{{ if eq .stack.provider \"aws\" }}{{ .outputs.bootstrap__nginx_ext1.lb_hostname }}{{ end }}"
-      ingress_class: "nginx-ext1"       # todo - pull this from a reference to the kapp itself
+      ingress_class: "nginx1"       # todo - pull this from a reference to the kapp itself
       db_host: "{{ .outputs.shared_data__site1_db.terraform.endpoint.value }}"
       db_user: "{{ .outputs.shared_data__site1_db.terraform.master_user.value }}"
       db_password: "{{ .outputs.shared_data__site1_db.terraform.master_password.value }}"
@@ -55,14 +55,14 @@ kapps:
       hostname: "{{ .kapp.id }}.{{ .cluster_hosted_zone }}"
       hosted_zone: "{{ .cluster_hosted_zone }}"
       cname_hostname: "{{ if eq .stack.provider \"aws\" }}{{ .outputs.bootstrap__nginx_ext1.lb_hostname }}{{ end }}"
-      ingress_class: "nginx-ext1"       # todo - pull this from a reference to the kapp itself
+      ingress_class: "nginx1"       # todo - pull this from a reference to the kapp itself
       db_host: "{{ .outputs.shared_data__site2_db.terraform.endpoint.value }}"
       db_user: "{{ .outputs.shared_data__site2_db.terraform.master_user.value }}"
       db_password: "{{ .outputs.shared_data__site2_db.terraform.master_password.value }}"
       db_name: "{{ .outputs.shared_data__site2_db.terraform.database.value }}"
       cluster_issuer: "{{ .outputs.bootstrap__cert_manager.clusterIssuer.metadata.name }}"
     depends_on:
-      - id: bootstrap:nginx-ext1
+      - id: bootstrap:nginx1
       - id: shared-data:site2-db
         conditions:
           - "{{ eq .stack.provider \"aws\" }}"

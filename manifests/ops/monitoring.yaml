@@ -1,7 +1,7 @@
 defaults:
   depends_on:   # all kapps in this manifest depend on these other kapps
     - id: bootstrap:cert-manager
-    - id: bootstrap:nginx-ext1
+    - id: bootstrap:nginx1
 
 kapps:
   - id: prometheus-operator
