@@ -1,0 +1,38 @@
+# This creates infrastructure that must exist before launching a kops cluster.
+# It creates an S3 bucket for Terraform remote state (not strictly necessary
+# but a fiddly task that should be done before running any other kapps) and
+# a hosted zone. It should be run as an initManifest so it gets executed before
+# creating a cluster.
+#
+# If you're running on a different provider, you could either reimplement these
+# kapps for your provider or create a `terraform_<provider>` directory in each
+# one so a single kapp can support multiple clouds.
+options:
+  sequential: true      # kapps in this manifest must be installed in order. This makes each kapp depend on
+                        # the preceding one without needing to explicitly define each dependency.
+
+kapps:
+  - id: terraform-bucket
+    sources:
+      - uri: git@github.com:sugarkube/kapps.git//incubator/terraform-bucket#master
+    templates:
+    # this kapp will add a '.tf' extension after creating an S3 bucket
+    # for remote terraform state and copying the state over to it. That way
+    # subsequent runs will use the remote state directly.
+      backend:
+        source: terraform/backend.tf
+        dest: terraform_aws/_generated_backend
+
+  - id: public-hosted-zone
+    conditions:
+      - "{{ eq .stack.provider \"aws\" }}"      # only run when using EKS (our kops example uses a the private hosted zones above)
+    sources:
+      - uri: git@github.com:sugarkube/kapps.git//incubator/public-hosted-zone#master
+    vars:
+      parent_hosted_zone: "{{ .root_hosted_zone }}"
+      hosted_zone: "{{ .cluster_hosted_zone }}"
+    post_install_actions:
+      - cluster_update:     # makes Sugarkube actually create the cluster. If we're running kops and private-hosted-zone kapp
+        # has already created it this action won't do much
+    pre_delete_actions:
+      - cluster_delete:         # before deleting this kapp delete the target cluster

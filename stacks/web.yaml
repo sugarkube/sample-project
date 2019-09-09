@@ -1,0 +1,58 @@
+defaults: &defaults
+  provider_vars_dirs:   # YAML files under here will be recursively merged. Used to configure
+    - ../providers/  # providers. Errors will be thrown if expected dirs don't exist.
+  kapp_vars_dirs:       # The values in YAML files in these directories will be recursively merged
+    - ../kapp-vars/    # into a single map/dict. The resulting values can be used to template
+    # files for kapps, or kapps can declare that they need them set as
+    # parameters/env vars in their `sugarkube.yaml` file.
+  template_dirs:
+    - ../templates/    # Source template file directories. Manifests can refer to files in these
+    # directories to write templated files into kapps to parameterise them by
+    # cluster/provider/profile, etc.
+
+local-web:        # a local stack for web development
+  <<: *defaults
+  cluster: standard
+  provider: local
+  provisioner: minikube
+  profile: minikube
+  manifests:        # Manifests are executed by running `sugarkube kapps apply`
+    # todo - support pulling these from git repos
+    - uri: ../manifests/web/bootstrap.yaml
+    - uri: ../manifests/web/wordpress-sites.yaml
+      id: wordpress       # explicitly set the manifest ID. Will be used as a prefix to generate kapp IDs.
+      overrides:
+        site2:
+          state: present    # explicitly enable this site we're pretending is still in dev
+
+dev-web:
+  <<: *defaults
+  cluster: devweb1
+  provider: aws
+  account: dev
+  profile: dev
+  provisioner: eks
+  region: eu-west-2
+  manifests:
+    - uri: ../manifests/web/prelaunch.yaml
+    - uri: ../manifests/web/bootstrap.yaml
+    - uri: ../manifests/web/shared-data.yaml      # we'll create a single shared database for the wordpress sites
+    - uri: ../manifests/web/wordpress-sites.yaml
+      id: wordpress
+
+# You could define a prod stack too, e.g.
+#prod-web:
+#  <<: *defaults
+#  cluster: prodweb1
+#  provider: aws
+#  account: prod
+#  profile: prod
+#  provisioner: eks
+#  region: eu-west-2
+#  manifests:
+#    - uri: ../manifests/web/prelaunch.yaml
+#    - uri: ../manifests/web/bootstrap.yaml
+#    - uri: ../manifests/web/core-aws.yaml
+#    - uri: ../manifests/web/shared-data.yaml      # we'll create a single shared database for the wordpress sites
+#    - uri: ../manifests/web/wordpress-sites.yaml
+#      id: wordpress

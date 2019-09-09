@@ -15,11 +15,6 @@ options:
 kapps:
   - id: tiller
     depends_on:
-      # tiller only depends on the `prelaunch:private-hosted-zone-clean-up` kapp when running on a stack using
-      # the 'kops' provisioner
-      - id: prelaunch:private-hosted-zone-clean-up
-        conditions:
-          - "{{ eq .stack.provisioner \"kops\" }}"
       - id: prelaunch:terraform-bucket
         conditions:
           - "{{ eq .stack.provider \"aws\" }}"
