@@ -7,6 +7,14 @@ kapps:
   - id: prometheus-operator
     sources:
       - uri: git@github.com:sugarkube/kapps.git//incubator/prometheus-operator#master    #branch: prometheus-operator-0.1.0
+    vars:
+      cert_manager_issuer_kind: "{{ .outputs.bootstrap__cert_manager.clusterIssuer.kind }}"
+      cert_manager_issuer_name: "{{ .outputs.bootstrap__cert_manager.clusterIssuer.metadata.name }}"
+      hostname: "{{ .kapp.id }}.{{ .cluster_hosted_zone }}"
+      ingress_class: "nginx1"
+      prometheusHostname: prometheus.{{ .cluster_name }}
+      grafanaHostname: grafana.{{ .cluster_name }}
+      alertManagerHostname: alertmanager.{{ .cluster_name }}
 
 #  # install the standalone grafana chart instead of the subchart in the prometheus operator
 #  - id: grafana
