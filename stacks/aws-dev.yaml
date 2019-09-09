@@ -26,9 +26,9 @@ account-setup:
             hosted_zone: "{{ .root_hosted_zone }}"
             create_acm_certs: true        # override a variable here to make the kapp create ACM certs for the domain
 
-kopsdev1:
+kopsdev1:             # this is the name of the stack. Pass this to various sugarkube commands
   <<: *defaults
-  cluster: dev1
+  cluster: dev1         # this is the actual name of the cluster to create
   provisioner: kops
   manifests:
     # if no protocol is given, file:// is assumed.
