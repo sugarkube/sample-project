@@ -23,25 +23,11 @@ kapps:
         source: terraform/backend.tf
         dest: terraform_aws/_generated_backend
 
-  - id: public-hosted-zone
-    conditions:
-      - "{{ eq .stack.provider \"aws\" }}"      # only run when using EKS (our kops example uses a the private hosted zones above)
-    sources:
-      - uri: git@github.com:sugarkube/kapps.git//incubator/public-hosted-zone#master
-    vars:
-      parent_hosted_zone: "{{ .root_hosted_zone }}"
-      hosted_zone: "{{ .cluster_hosted_zone }}"
-    post_install_actions:
-      - cluster_update:     # makes Sugarkube actually create the cluster. If we're running kops and private-hosted-zone kapp
-        # has already created it this action won't do much
-    pre_delete_actions:
-      - cluster_delete:         # before deleting this kapp delete the target cluster
-
   # creates a private hosted zone and a temporary placeholder VPC before kicking
   # off the cluster update
   - id: private-hosted-zone
     conditions:
-    - "{{ eq .stack.provisioner \"kops\" }}"
+    - "{{ eq .stack.provisioner \"kops\" }}"        # only execute this when using kops (i.e. not when running minikube clusters)
     sources:
       - uri: git@github.com:sugarkube/kapps.git//incubator/private-hosted-zone#master
     post_install_actions:
@@ -54,3 +40,5 @@ kapps:
     - "{{ eq .stack.provisioner \"kops\" }}"
     sources:
       - uri: git@github.com:sugarkube/kapps.git//incubator/private-hosted-zone#master
+    pre_delete_actions:
+      - cluster_delete:         # before deleting this kapp delete the target cluster
