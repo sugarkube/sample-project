@@ -36,7 +36,7 @@ kapps:
       namespace: wordpress-site1      # different namespace
       hostname: "{{ .kapp.id }}.{{ .cluster_hosted_zone }}"
       hosted_zone: "{{ .cluster_hosted_zone }}"
-      cname_hostname: "{{ if eq .stack.provider \"aws\" }}{{ .outputs.bootstrap__nginx_ext1.lb_hostname }}{{ end }}"
+      cname_hostname: "{{ if eq .stack.provider \"aws\" }}{{ .outputs.bootstrap__nginx1.lb_hostname }}{{ end }}"
       ingress_class: "nginx1"       # todo - pull this from a reference to the kapp itself
       db_host: "{{ .outputs.shared_data__site1_db.terraform.endpoint.value }}"
       db_user: "{{ .outputs.shared_data__site1_db.terraform.master_user.value }}"
@@ -55,7 +55,7 @@ kapps:
     vars:
       hostname: "{{ .kapp.id }}.{{ .cluster_hosted_zone }}"
       hosted_zone: "{{ .cluster_hosted_zone }}"
-      cname_hostname: "{{ if eq .stack.provider \"aws\" }}{{ .outputs.bootstrap__nginx_ext1.lb_hostname }}{{ end }}"
+      cname_hostname: "{{ if eq .stack.provider \"aws\" }}{{ .outputs.bootstrap__nginx1.lb_hostname }}{{ end }}"
       ingress_class: "nginx1"       # todo - pull this from a reference to the kapp itself
       db_host: "{{ .outputs.shared_data__site2_db.terraform.endpoint.value }}"
       db_user: "{{ .outputs.shared_data__site2_db.terraform.master_user.value }}"
