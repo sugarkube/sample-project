@@ -63,5 +63,5 @@ provisioner:
           sugarkube: "true"
         cloudLabels:
           project: sugarkube-demo
-        maxSize: 1          # change these then run `sugarkube cluster update -n aws-dev -s examples/stacks.yaml`
+        maxSize: 2          # change these then run `sugarkube cluster update -n aws-dev -s examples/stacks.yaml`
         minSize: 1          # and watch the config changes take effect
