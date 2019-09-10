@@ -31,6 +31,7 @@ kapps:
       - id: shared-data:site1-db
         conditions:
           - "{{ eq .stack.provider \"aws\" }}"
+          - "{{ eq .stack.profile \"dev\" }}"       # only create an RDS DB for the dev profile (prod will use resources created separately)
     vars:
       namespace: wordpress-site1      # different namespace
       hostname: "{{ .kapp.id }}.{{ .cluster_hosted_zone }}"
@@ -66,3 +67,4 @@ kapps:
       - id: shared-data:site2-db
         conditions:
           - "{{ eq .stack.provider \"aws\" }}"
+          - "{{ eq .stack.profile \"dev\" }}"       # only create an RDS DB for the dev profile (prod will use resources created separately)

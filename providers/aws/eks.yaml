@@ -2,3 +2,39 @@
 
 # EKS cluster names must satisfy the regex '[a-zA-Z][-a-zA-Z0-9]*' so we don't fully qualify them like for kops clusters
 cluster_name: "{{ .stack.cluster }}"
+
+# eksctl names the context <user>@<cluster>, but sugarkube will strip off the <user> part to make these configs
+# more useful when shared between multiple users
+kube_context: "{{ .cluster_name }}.{{ .stack.region }}.eksctl.io"
+
+node_group_name: nodegroup-1      # we declare this here so we can pass it to kapps
+
+provisioner:
+  binary: eksctl
+  params:
+    get_cluster:     # flags for the `get cluster` command
+      name: "{{ .cluster_name }}"           # this key is required
+    utils:
+      write_kubeconfig:
+        name: "{{ .cluster_name }}"
+        region: "{{ .stack.region }}"
+
+    # everything under this key is written to a YAML file and passed to eksctl. See https://eksctl.io/usage/schema/
+    # for the available keys
+    config_file:
+      apiVersion: eksctl.io/v1alpha5
+      kind: ClusterConfig
+
+      metadata:
+        name: "{{ .cluster_name }}"
+        region: "{{ .stack.region }}"
+      nodeGroups:
+        - name: "{{ .node_group_name }}"
+          instanceType: t3a.medium
+          desiredCapacity: 2
+          labels:
+            role: workers
+            sugarkube: "true"
+          ssh:
+            publicKeyName: sugarkube-example
+            publicKeyPath: ~/.ssh/sugarkube-example.pub

@@ -39,9 +39,27 @@ dev-web:
     - uri: ../manifests/web/bootstrap.yaml
     - uri: ../manifests/web/shared-data.yaml      # we'll create an RDS database for each wordpress site
     - uri: ../manifests/web/wordpress-sites.yaml
-      id: wordpress
+      id: wordpress         # explicitly set the manifest ID.
 
-# You could define a prod stack too, e.g.
+# To go to production we should have 2 stacks, one for stateful resources or things that are slow/difficult to create
+# (e.g. databases, cloudfront distributions, a public hosted zone etc.), and one for the ephemeral k8s cluster running
+# applications. The former would only be executed periodically. E.g.:
+
+#prod-resources:
+#  <<: *defaults
+#  cluster: prodresources
+#  provider: aws
+#  account: prod
+#  profile: prod
+#  provisioner: none          # no need for a provisioner since we aren't creating a cluster
+#  region: eu-west-2
+#  manifests:
+#    - uri: ../manifests/web/shared-data.yaml         # just create the databases
+
+# The above would give us some credentials and hostnames for the 2 databases. One approach for passing them through to
+# ephemeral clusters would be to override the variables in this stack config file using `overrides` blocks as
+# demonstrated below:
+
 #prod-web:
 #  <<: *defaults
 #  cluster: prodweb1
@@ -53,7 +71,18 @@ dev-web:
 #  manifests:
 #    - uri: ../manifests/web/prelaunch.yaml
 #    - uri: ../manifests/web/bootstrap.yaml
-#    - uri: ../manifests/web/core-aws.yaml
-#    - uri: ../manifests/web/shared-data.yaml      # we'll create a single shared database for the wordpress sites
-#    - uri: ../manifests/web/wordpress-sites.yaml
-#      id: wordpress
+#    - uri: ../manifests/web/wordpress-sites.yaml       # Note: in this manifest there's a condition that wordpress only
+#      id: wordpress                                    # depends on the RDS DBs when using the dev profile
+#      overrides:
+#        site1:
+#          vars:
+#            db_host: site1.db.example.amazonaws.com
+#            db_user: wordpress1
+#            db_password:                    # this should come from a secure password store, accessed by a script/terraform
+#            db_name: wordpress
+#        site2:
+#          vars:
+#            db_host: site2.db.example.amazonaws.com
+#            db_user: wordpress2
+#            db_password:                    # this should come from a secure password store, accessed by a script/terraform
+#            db_name: wordpress
