@@ -3,8 +3,8 @@ provisioner:
     create_cluster:
       # smaller instances, fewer masters and nodes
       master_count: 1
-      node_count: 2
-      node_size: t3a.small
+      node_count: 1
+      node_size: t3a.medium
 
   specs:
     cluster:
