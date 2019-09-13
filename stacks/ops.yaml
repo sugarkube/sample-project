@@ -39,6 +39,7 @@ dev-ops:
   manifests:
     - uri: ../manifests/ops/prelaunch.yaml
     - uri: ../manifests/ops/bootstrap.yaml
+    - uri: ../manifests/ops/core-aws.yaml
     - uri: ../manifests/ops/security.yaml
     - uri: ../manifests/ops/monitoring.yaml
     - uri: ../manifests/ops/ci-cd.yaml
