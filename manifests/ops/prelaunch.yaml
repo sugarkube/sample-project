@@ -12,6 +12,14 @@ options:
                         # the preceding one without needing to explicitly define each dependency.
 
 kapps:
+  - id: kops-image
+    sources:
+      - uri: git@github.com:sugarkube/kapps.git//incubator/kops-image#master
+    conditions:
+      - "{{ eq .stack.provisioner \"kops\" }}"        # only execute this when using kops
+    vars:
+      region: "{{ .stack.region }}"
+
   - id: terraform-bucket
     sources:
       - uri: git@github.com:sugarkube/kapps.git//incubator/terraform-bucket#master
@@ -27,7 +35,7 @@ kapps:
   # off the cluster update
   - id: private-hosted-zone
     conditions:
-    - "{{ eq .stack.provisioner \"kops\" }}"        # only execute this when using kops (i.e. not when running minikube clusters)
+    - "{{ eq .stack.provisioner \"kops\" }}"        # only execute this when using kops
     sources:
       - uri: git@github.com:sugarkube/kapps.git//incubator/private-hosted-zone#master
     post_install_actions:

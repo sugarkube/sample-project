@@ -1,5 +1,7 @@
 provisioner:
   params:
     create_cluster:
+    # we could hard-code the image ID here as shown below, but TBH it's a pain. By default kops automatically upgrades itself, so unless the ID below is the very latest image ID then what happens is several minutes after a new cluster comes up the masters start rebooting themselves to apply the update. WIth a single master this can cause a loss of access to the API server which prevents Sugarkube from installing kapps. So instead of hard-coding the image ID below, we use a kapp called `kops-image` in the `prelaunch` manifest to dynamically grab the latest ID. That kapp then generates a file like this one and adds it to Sugarkube's list of provider files to load and merge together.
+
       # from https://stable.release.core-os.net/amd64-usr/current/coreos_production_ami_hvm_eu-west-2.txt
-      image: ami-0f5a5105bc30d5172
+#      image: ami-0f5c4ede722171894
