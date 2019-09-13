@@ -17,4 +17,4 @@ terraform:
   state:
     bucket: "{{ .state_bucket }}"
     path: "terraform/{{ .stack.region }}"       # terraform state will be stored in its own subdirectory
-    key: "{{ .terraform.state.path }}/{{ .kapp.id }}/terraform.tfstate"
+    key: "{{ .terraform.state.path }}/{{ .kapp.manifestId }}/{{ .kapp.id }}/terraform.tfstate"
