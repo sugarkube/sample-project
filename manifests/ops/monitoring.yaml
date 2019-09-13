@@ -10,14 +10,9 @@ kapps:
     vars:
       cert_manager_issuer_kind: "{{ .outputs.bootstrap__cert_manager.clusterIssuer.kind }}"
       cert_manager_issuer_name: "{{ .outputs.bootstrap__cert_manager.clusterIssuer.metadata.name }}"
-      hostname: "{{ .kapp.id }}.{{ .cluster_hosted_zone }}"
       ingress_class: "nginx1"
-      prometheus_hostname: prometheus.{{ .cluster_name }}
-      grafana_hostname: grafana.{{ .cluster_name }}
-      alert_manager_hostname: alertmanager.{{ .cluster_name }}
-
-#  # install the standalone grafana chart instead of the subchart in the prometheus operator
-#  - id: grafana
-#    sources:
-#      - uri: git@github.com:sugarkube/kapps.git//incubator/grafana#master    #branch: grafana-0.1.0
-#      - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
+      prometheus_hostname: prometheus
+      grafana_hostname: grafana
+      alert_manager_hostname: alertmanager
+      hosted_zone: "{{ .cluster_hosted_zone }}"
+      cname_hostname: "{{ if eq .stack.provider \"aws\" }}{{ .outputs.bootstrap__nginx1.lb_hostname }}{{ end }}"
