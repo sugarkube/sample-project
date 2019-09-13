@@ -14,3 +14,5 @@ kapps:
       cert_manager_issuer_name: "{{ .outputs.bootstrap__cert_manager.clusterIssuer.metadata.name }}"
       hostname: "{{ .kapp.id }}.{{ .cluster_hosted_zone }}"
       ingress_class: "nginx1"
+      hosted_zone: "{{ .cluster_hosted_zone }}"
+      cname_hostname: "{{ if eq .stack.provider \"aws\" }}{{ .outputs.bootstrap__nginx1.lb_hostname }}{{ end }}"
