@@ -92,7 +92,7 @@ programs:
               {{ .kapp.vars.namespace }}
             env_vars:
               KUBECONFIG: "{{ .kapp.vars.kubeconfig }}"
-            merge_priority: 15         # delete
+            merge_priority: 15
 
   kubectl:
     vars:
