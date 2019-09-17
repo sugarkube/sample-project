@@ -2,6 +2,7 @@
 # one-time/infrequent task and creating ACM certs can be slow, so it's spun out into its own config (a stack without
 # a cluster).
 account-setup:
+  cluster: setup      # used for namespacing resources
   provider: aws
 #  account: dev         # these are commented out so they must be given on the command line
 #  profile: dev
@@ -18,10 +19,14 @@ account-setup:
     # cluster/provider/profile, etc.  cluster: setup        # this is used in a bucket name for terraform state
   provisioner: none
   manifests:
-    - uri: ../manifests/prelaunch.yaml
+    - uri: ../manifests/web/prelaunch.yaml
       overrides:
         public-hosted-zone:     # ID of the kapp to override values for
           vars:
             parent_hosted_zone: "{{ .domain }}"
             hosted_zone: "{{ .root_hosted_zone }}"
             create_acm_certs: true        # override a variable here to make the kapp create ACM certs for the domain
+          post_install_actions:       # disable performing any actions
+            - skip:
+          pre_delete_actions:
+            - skip:
