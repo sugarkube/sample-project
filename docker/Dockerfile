@@ -4,7 +4,6 @@ ARG SUGARKUBE_VERSION=0.8.0
 ARG KOPS_VERSION=1.13.0
 ARG KUBECTL_VERSION=v1.13.0
 ARG EKSCTL_VERSION=0.5.3
-ARG MINIKUBE_VERSION=v1.3.1
 
 RUN apk -v --upgrade --no-cache add \
     bash \
@@ -36,8 +35,4 @@ RUN apk -v --upgrade --no-cache add \
   && \
     rm /tmp/eksctl.tgz \
   && \
-    chmod +x /usr/local/bin/eksctl \
-  && \
-    wget https://storage.googleapis.com/minikube/releases/${MINIKUBE_VERSION}/minikube-linux-amd64 -O /usr/local/bin/minikube \
-  && \
-    chmod +x /usr/local/bin/minikube
+    chmod +x /usr/local/bin/eksctl
