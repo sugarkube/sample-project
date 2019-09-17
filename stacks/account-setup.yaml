@@ -19,14 +19,14 @@ account-setup:
     # cluster/provider/profile, etc.  cluster: setup        # this is used in a bucket name for terraform state
   provisioner: none
   manifests:
-    - uri: ../manifests/web/prelaunch.yaml
-      overrides:
+    - uri: ../manifests/web/prelaunch.yaml      # in reality it'd be safer to create a dedicated manifest to avoid accidentally
+      overrides:                                # breaking this stack, but this illustrates how to override settings for a kapp in a manifest
         public-hosted-zone:     # ID of the kapp to override values for
           vars:
             parent_hosted_zone: "{{ .domain }}"
             hosted_zone: "{{ .root_hosted_zone }}"
             create_acm_certs: true        # override a variable here to make the kapp create ACM certs for the domain
           post_install_actions:       # disable performing any actions
-            - skip:
+            - none:
           pre_delete_actions:
-            - skip:
+            - none:
