@@ -17,7 +17,7 @@ kapps:
     conditions:
       - "{{ eq .stack.provider \"aws\" }}"
     sources:
-      - uri: git@github.com:sugarkube/kapps.git//incubator/aws-vpn/#master      #      branch: aws-vpn-0.1.0
+      - uri: git@github.com:sugarkube/kapps.git//incubator/aws-vpn/#aws-vpn-0.1.0
     vars:
       vpc_name: "{{ .cluster_name }}"
       hostnames: "vpn.{{ .cluster_name }}"

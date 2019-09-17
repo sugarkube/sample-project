@@ -14,7 +14,7 @@ options:
 kapps:
   - id: terraform-bucket
     sources:
-      - uri: git@github.com:sugarkube/kapps.git//incubator/terraform-bucket#master
+      - uri: git@github.com:sugarkube/kapps.git//incubator/terraform-bucket#terraform-bucket-0.1.0
     templates:
     # this kapp will add a '.tf' extension after creating an S3 bucket
     # for remote terraform state and copying the state over to it. That way
@@ -27,7 +27,7 @@ kapps:
     conditions:
       - "{{ eq .stack.provider \"aws\" }}"      # only run when using EKS (our kops example uses a the private hosted zones above)
     sources:
-      - uri: git@github.com:sugarkube/kapps.git//incubator/public-hosted-zone#master
+      - uri: git@github.com:sugarkube/kapps.git//incubator/public-hosted-zone#public-hosted-zone-0.1.0
     vars:
       parent_hosted_zone: "{{ .root_hosted_zone }}"
       hosted_zone: "{{ .cluster_hosted_zone }}"
