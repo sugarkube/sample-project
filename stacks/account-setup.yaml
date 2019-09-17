@@ -1,0 +1,27 @@
+# this is used to create shared resources, e.g. a generic dev public hosted zone and an ACM certificate. This is a
+# one-time/infrequent task and creating ACM certs can be slow, so it's spun out into its own config (a stack without
+# a cluster).
+account-setup:
+  provider: aws
+#  account: dev         # these are commented out so they must be given on the command line
+#  profile: dev
+  region: eu-west-2
+  provider_vars_dirs:   # YAML files under here will be recursively merged. Used to configure
+    - ../providers/  # providers. Errors will be thrown if expected dirs don't exist.
+  kapp_vars_dirs:       # The values in YAML files in these directories will be recursively merged
+    - ../kapp-vars/    # into a single map/dict. The resulting values can be used to template
+    # files for kapps, or kapps can declare that they need them set as
+    # parameters/env vars in their `sugarkube.yaml` file.
+  template_dirs:
+    - ../templates/    # Source template file directories. Manifests can refer to files in these
+    # directories to write templated files into kapps to parameterise them by
+    # cluster/provider/profile, etc.  cluster: setup        # this is used in a bucket name for terraform state
+  provisioner: none
+  manifests:
+    - uri: ../manifests/prelaunch.yaml
+      overrides:
+        public-hosted-zone:     # ID of the kapp to override values for
+          vars:
+            parent_hosted_zone: "{{ .domain }}"
+            hosted_zone: "{{ .root_hosted_zone }}"
+            create_acm_certs: true        # override a variable here to make the kapp create ACM certs for the domain
