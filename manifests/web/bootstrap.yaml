@@ -25,9 +25,9 @@ kapps:
         conditions:
           - "{{ eq .stack.provisioner \"eks\" }}"       # conditions can use any available variable
     sources:
-      - uri: git@github.com:sugarkube/kapps.git//incubator/tiller#tiller-0.1.0
+      - uri: https://github.com/sugarkube/kapps.git//incubator/tiller#tiller-0.1.0
   # Multiple sources can be defined, e.g.
-  #      - uri: git@github.com:sugarkube/kapps.git//incubator/common-makefiles#master
+  #      - uri: https://github.com/sugarkube/kapps.git//incubator/common-makefiles#master
 
   # The default installer for manifests is stored in config so we don't need
   # to add it to every entry. But we could in future with e.g. `installer: my-installer`
@@ -43,12 +43,12 @@ kapps:
       # sources are downloaded by `acquirers`. Currently we only have a git
       # acquirer, and the acquirer to use is inferred from the uri. Other
       # settings are specific to the acquirer.
-      - uri: git@github.com:sugarkube/kapps.git//incubator/cert-manager#cert-manager-0.2.0
+      - uri: https://github.com/sugarkube/kapps.git//incubator/cert-manager#cert-manager-0.2.0
 
   # This will create a LoadBalancer ingress on AWS or a NodePort otherwise
   - id: nginx1      # this can be anything - it doesn't need to relate to the name of any source
     sources:
-      - uri: git@github.com:sugarkube/kapps.git//incubator/nginx-ingress#nginx-ingress-0.1.0
+      - uri: https://github.com/sugarkube/kapps.git//incubator/nginx-ingress#nginx-ingress-0.1.0
     vars:
       cert_manager_kind: "{{ .outputs.cert_manager.clusterIssuer.kind }}"
       cert_manager_name: "{{ .outputs.cert_manager.clusterIssuer.metadata.name }}"
@@ -58,7 +58,7 @@ kapps:
   # If you wanted another ingress you could create it like this:
 #  - id: nginx2       # this can be anything - it doesn't need to relate to the name of any source
 #    sources:
-#      - uri: git@github.com:sugarkube/kapps.git//incubator/nginx-ingress#nginx-ingress-0.1.0
+#      - uri: https://github.com/sugarkube/kapps.git//incubator/nginx-ingress#nginx-ingress-0.1.0
 #    vars:
 #      cert_manager_kind: "{{ .outputs.cert_manager.clusterIssuer.kind }}"
 #      cert_manager_name: "{{ .outputs.cert_manager.clusterIssuer.metadata.name }}"

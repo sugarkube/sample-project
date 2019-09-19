@@ -6,7 +6,7 @@ defaults:
 kapps:
   - id: prometheus-operator
     sources:
-      - uri: git@github.com:sugarkube/kapps.git//incubator/prometheus-operator#prometheus-operator-0.1.0
+      - uri: https://github.com/sugarkube/kapps.git//incubator/prometheus-operator#prometheus-operator-0.1.0
     vars:
       cert_manager_issuer_kind: "{{ .outputs.bootstrap__cert_manager.clusterIssuer.kind }}"
       cert_manager_issuer_name: "{{ .outputs.bootstrap__cert_manager.clusterIssuer.metadata.name }}"
