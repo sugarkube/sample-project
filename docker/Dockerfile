@@ -1,6 +1,6 @@
 FROM python:3-alpine
 
-ARG SUGARKUBE_VERSION=0.9.1
+ARG SUGARKUBE_VERSION=0.10.0
 ARG KOPS_VERSION=1.13.0
 ARG KUBECTL_VERSION=v1.13.0
 ARG EKSCTL_VERSION=0.5.3
@@ -17,7 +17,7 @@ RUN apk -v --upgrade --no-cache add \
   && \
     apk add cfssl --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted \
   && \
-    wget https://github.com/sugarkube/sugarkube/releases/download/${SUGARKUBE_VERSION}/sugarkube-amd64 -O /usr/local/bin/sugarkube \
+    wget https://github.com/sugarkube/sugarkube/releases/download/${SUGARKUBE_VERSION}/sugarkube-linux-amd64 -O /usr/local/bin/sugarkube \
   && \
     mkdir /etc/sugarkube \
   && \
