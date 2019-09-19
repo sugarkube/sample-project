@@ -15,6 +15,9 @@ options:
 kapps:
   - id: tiller
     depends_on:
+      - id: prelaunch:no-op
+        conditions:
+          - "{{ eq .stack.provisioner \"minikube\" }}"
       - id: prelaunch:terraform-bucket
         conditions:
           - "{{ eq .stack.provider \"aws\" }}"

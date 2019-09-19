@@ -1,6 +1,6 @@
 FROM python:3-alpine
 
-ARG SUGARKUBE_VERSION=0.8.0
+ARG SUGARKUBE_VERSION=0.9.0
 ARG KOPS_VERSION=1.13.0
 ARG KUBECTL_VERSION=v1.13.0
 ARG EKSCTL_VERSION=0.5.3
@@ -9,6 +9,7 @@ RUN apk -v --upgrade --no-cache add \
     bash \
     jq \
     git \
+    graphviz \
     wget \
   && \
     pip3 --no-cache-dir install -U awscli \
@@ -18,6 +19,10 @@ RUN apk -v --upgrade --no-cache add \
     wget https://github.com/sugarkube/sugarkube/releases/download/${SUGARKUBE_VERSION}/sugarkube-amd64 -O /usr/local/bin/sugarkube \
   && \
     chmod +x /usr/local/bin/sugarkube \
+  && \
+    mkdir /etc/sugarkube \
+  && \
+    wget https://raw.githubusercontent.com/sugarkube/sugarkube/${SUGARKUBE_VERSION}/sugarkube-conf-basic.yaml -O /etc/sugarkube/sugarkube-conf.yaml \
   && \
     wget https://github.com/kubernetes/kops/releases/download/${KOPS_VERSION}/kops-linux-amd64 -O /usr/local/bin/kops \
   && \

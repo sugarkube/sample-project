@@ -16,7 +16,11 @@ local-web:        # a local stack for web development
   provider: local
   provisioner: minikube
   profile: minikube
+  defaults:
+    vars:
+      helm_timeout: 1200      # 20 minutes. Wordpress and MariaDB are beasts.
   manifests:        # Manifests are executed by running `sugarkube kapps apply`
+    - uri: ../manifests/web/prelaunch.yaml
     - uri: ../manifests/web/bootstrap.yaml
     - uri: ../manifests/web/wordpress-sites.yaml
       id: wordpress       # explicitly set the manifest ID. Will be used as a prefix to generate kapp IDs.

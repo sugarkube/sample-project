@@ -13,6 +13,8 @@ options:
 
 kapps:
   - id: terraform-bucket
+    conditions:
+      - "{{ eq .stack.provider \"aws\" }}"      # only run when using AWS
     sources:
       - uri: git@github.com:sugarkube/kapps.git//incubator/terraform-bucket#terraform-bucket-0.1.0
     templates:
@@ -25,7 +27,7 @@ kapps:
 
   - id: public-hosted-zone
     conditions:
-      - "{{ eq .stack.provider \"aws\" }}"      # only run when using EKS (our kops example uses a the private hosted zones above)
+      - "{{ eq .stack.provider \"aws\" }}"      # only run when using AWS
     sources:
       - uri: git@github.com:sugarkube/kapps.git//incubator/public-hosted-zone#public-hosted-zone-0.1.0
     vars:
@@ -36,3 +38,13 @@ kapps:
         # has already created it this action won't do much
     pre_delete_actions:
       - cluster_delete:         # before deleting this kapp delete the target cluster
+
+  - id: no-op
+    conditions:
+      - "{{ eq .stack.provisioner \"minikube\" }}"      # only run when using minikube
+    sources:
+      - uri: git@github.com:sugarkube/kapps.git//stable/no-op#no-op-1.0.0
+    post_install_actions:
+      - cluster_update:     # makes Sugarkube actually create the cluster.
+    pre_delete_actions:
+      - cluster_delete:     # before deleting this kapp delete the target cluster
