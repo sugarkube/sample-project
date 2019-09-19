@@ -25,7 +25,7 @@ kapps:
 #      # this lets us reuse the same kapp parameterised differently per instance
 #      path: examples/values/wordpress/site1/
       - id: data
-        uri: git@github.com:sugarkube/sample-project.git//demo-data/wordpress/site1#master
+        uri: https://github.com/sugarkube/sample-project.git//demo-data/wordpress/site1#master
     depends_on:
       - id: bootstrap:nginx1
       - id: shared-data:site1-db
@@ -51,7 +51,7 @@ kapps:
       # for a source from a stack config file.
       - uri: https://github.com/sugarkube/kapps.git//incubator/wordpress#wordpress-0.1.0
       - id: data   # the ID can be explicitly defined
-        uri: git@github.com:sugarkube/sample-project.git//demo-data/wordpress/site2#master
+        uri: https://github.com/sugarkube/sample-project.git//demo-data/wordpress/site2#master
     vars:
       hostname: "{{ .kapp.id }}.{{ .cluster_hosted_zone }}"
       hosted_zone: "{{ .cluster_hosted_zone }}"
