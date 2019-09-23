@@ -45,17 +45,17 @@ dev-ops:
     - uri: ../manifests/ops/ci-cd.yaml
 
 # You could define a prod stack too, e.g.
-prod-ops:
-  <<: *defaults
-  cluster: prodops1
-  provisioner: kops
-  provider: aws
-  account: prod
-  profile: prod
-  region: eu-west-2
-  manifests:
-    - uri: ../manifests/ops/prelaunch.yaml
-    - uri: ../manifests/ops/bootstrap.yaml
-    - uri: ../manifests/ops/security.yaml
-    - uri: ../manifests/ops/monitoring.yaml
-    - uri: ../manifests/ops/ci-cd.yaml
+#prod-ops:
+#  <<: *defaults
+#  cluster: prodops1
+#  provisioner: kops
+#  provider: aws
+#  account: prod
+#  profile: prod
+#  region: eu-west-2
+#  manifests:
+#    - uri: ../manifests/ops/prelaunch.yaml
+#    - uri: ../manifests/ops/bootstrap.yaml
+#    - uri: ../manifests/ops/security.yaml
+#    - uri: ../manifests/ops/monitoring.yaml
+#    - uri: ../manifests/ops/ci-cd.yaml
