@@ -4,7 +4,6 @@ provisioner:
   params:
     start:        # parameters for the `minikube start` command
       memory: 5120
-      cpus: 4
       disk_size: 100g
       extra_config:       # this is a special flag that can be repeated multiple times
         - kubelet.authentication-token-webhook=true       # values required for prometheus
