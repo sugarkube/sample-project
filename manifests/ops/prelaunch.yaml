@@ -30,6 +30,8 @@ kapps:
       backend:
         source: terraform/backend.tf
         dest: terraform_aws/_generated_backend
+    conditions:
+      - "{{ eq .stack.provider \"aws\" }}"      # only run when using AWS
 
   # creates a private hosted zone and a temporary placeholder VPC before kicking
   # off the cluster update
@@ -50,3 +52,13 @@ kapps:
       - uri: https://github.com/sugarkube/kapps.git//incubator/private-hosted-zone#private-hosted-zone-0.1.0
     pre_delete_actions:
       - cluster_delete:         # before deleting this kapp delete the target cluster
+
+  - id: no-op
+    conditions:
+      - "{{ eq .stack.provisioner \"minikube\" }}"      # only run when using minikube
+    sources:
+      - uri: https://github.com/sugarkube/kapps.git//stable/no-op#no-op-1.0.0
+    post_install_actions:
+      - cluster_update:     # makes Sugarkube actually create the cluster.
+    pre_delete_actions:
+      - cluster_delete:     # before deleting this kapp delete the target cluster

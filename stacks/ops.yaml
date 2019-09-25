@@ -22,6 +22,7 @@ local-ops:        # local stack for ops-type work
   profile: minikube
   manifests:
     # if no protocol is given, file:// is assumed.
+    - uri: ../manifests/web/prelaunch.yaml
     - uri: ../manifests/ops/bootstrap.yaml
     - uri: ../manifests/ops/security.yaml
     - uri: ../manifests/ops/monitoring.yaml
