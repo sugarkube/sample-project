@@ -5,6 +5,7 @@ ARG KOPS_VERSION=1.13.0
 ARG KUBECTL_VERSION=v1.13.0
 ARG EKSCTL_VERSION=0.5.3
 ARG HELM_VERSION=2.14.3
+ARG TERRAFORM_VERSION=0.12.9
 
 RUN apk -v --upgrade --no-cache add \
     bash \
@@ -39,8 +40,12 @@ RUN apk -v --upgrade --no-cache add \
   && \
     mv /tmp/eksctl /usr/local/bin/ \
   && \
-    rm /tmp/eksctl.tgz \
+    wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -O /tmp/terraform.zip \
+  && \
+    unzip -d /usr/local/bin/ /tmp/terraform.zip \
   && \
     chmod +x /usr/local/bin/* \
   && \
     rm -rf /tmp/*
+
+RUN mkdir /root/Downloads
