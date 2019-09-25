@@ -12,6 +12,7 @@ RUN apk -v --upgrade --no-cache add \
     jq \
     git \
     graphviz \
+    openssh-client \
     wget \
   && \
     pip3 --no-cache-dir install -U awscli \
@@ -48,4 +49,8 @@ RUN apk -v --upgrade --no-cache add \
   && \
     rm -rf /tmp/*
 
-RUN mkdir /root/Downloads
+RUN mkdir /root/Downloads \
+  && \
+    mkdir /root/.ssh \
+  && \
+    chmod 0700 /root/.ssh
